@@ -2,6 +2,8 @@ package com.majidbahmani.lisbonav.di
 
 import com.majidbahmani.lisbonav.data.remote.CarrisMetropolitanaApi
 import com.majidbahmani.lisbonav.data.remote.KtorCarrisMetropolitanaApi
+import com.majidbahmani.lisbonav.data.repository.VehicleRepositoryImpl
+import com.majidbahmani.lisbonav.domain.repository.VehicleRepository
 import io.ktor.client.HttpClient
 import org.koin.core.KoinApplication
 import org.koin.dsl.koinApplication
@@ -24,6 +26,11 @@ class AppModulesTest {
     @Test
     fun api_resolvesToKtorImplementation() {
         assertIs<KtorCarrisMetropolitanaApi>(app.koin.get<CarrisMetropolitanaApi>())
+    }
+
+    @Test
+    fun vehicleRepository_resolvesToImplementation() {
+        assertIs<VehicleRepositoryImpl>(app.koin.get<VehicleRepository>())
     }
 
     @Test
