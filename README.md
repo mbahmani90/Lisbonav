@@ -39,7 +39,13 @@ presentation ──► domain ◄── data
 ```
 shared/src/
 ├── commonMain/…/lisbonav/
-│   ├── data/remote/          # Ktor API client, DTOs, HttpClient factory
+│   ├── domain/
+│   │   ├── model/            # Vehicle, GeoPoint, VehicleStatus (plain Kotlin)
+│   │   └── repository/       # VehicleRepository interface
+│   ├── data/
+│   │   ├── remote/           # Ktor API client, DTOs, HttpClient factory
+│   │   ├── mapper/           # DTO → domain (drops vehicles without a usable position)
+│   │   └── repository/       # VehicleRepositoryImpl: errors returned as Result
 │   └── di/                   # Koin modules, initKoin()
 ├── androidMain/…/di/         # OkHttp engine
 └── iosMain/…/di/             # Darwin engine, initKoinIos() for Swift
@@ -77,7 +83,7 @@ Shared tests run on both platforms, without network access:
 
 - [x] Vehicles API client and DTO (Ktor + kotlinx.serialization)
 - [x] Dependency injection (Koin, platform HTTP engines)
-- [ ] Domain model, mapper and repository
+- [x] Domain model, mapper and repository
 - [ ] ViewModel and map screen with live bus positions
 - [ ] Request logging (debug only) and timeouts
 - [ ] CI (GitHub Actions)
