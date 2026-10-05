@@ -8,20 +8,20 @@ import com.majidbahmani.lisbonav.feature.map.data.remote.KtorCarrisMetropolitana
 import com.majidbahmani.lisbonav.feature.map.data.repository.VehicleRepositoryImpl
 import com.majidbahmani.lisbonav.feature.map.domain.repository.VehicleRepository
 import com.majidbahmani.lisbonav.feature.map.domain.usecase.GetVehiclesUseCase
-import com.majidbahmani.lisbonav.feature.map.presentation.viewmodel.VehicleMapViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import com.majidbahmani.lisbonav.feature.map.fake.FakeAnalytics
-import org.koin.dsl.koinApplication
-import org.koin.dsl.module
+import com.majidbahmani.lisbonav.feature.map.presentation.viewmodel.VehicleMapViewModel
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertIs
 import kotlin.test.assertNotSame
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.koin.dsl.koinApplication
+import org.koin.dsl.module
 
 /** The feature's bindings, including its internal classes, on top of :core; no network calls. */
 @OptIn(ExperimentalCoroutinesApi::class)

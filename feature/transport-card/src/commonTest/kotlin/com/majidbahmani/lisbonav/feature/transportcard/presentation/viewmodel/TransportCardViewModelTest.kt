@@ -8,6 +8,10 @@ import com.majidbahmani.lisbonav.feature.transportcard.domain.model.TransportPas
 import com.majidbahmani.lisbonav.feature.transportcard.domain.repository.TransportCardReader
 import com.majidbahmani.lisbonav.feature.transportcard.domain.usecase.ReadTransportCardUseCase
 import com.majidbahmani.lisbonav.feature.transportcard.fake.FakeAnalytics
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -22,10 +26,6 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlinx.datetime.LocalDate
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TransportCardViewModelTest {
@@ -64,9 +64,12 @@ class TransportCardViewModelTest {
     private val viewModel by lazy { TransportCardViewModel(ReadTransportCardUseCase(reader), analytics) }
 
     private val today = LocalDate(2026, 10, 5)
-    private val expired = TransportPass(TransportPass.Type.OTHER, 1, LocalDate(2026, 9, 1), LocalDate(2026, 9, 30), null)
-    private val october = TransportPass(TransportPass.Type.OTHER, 2, LocalDate(2026, 9, 28), LocalDate(2026, 10, 31), null)
-    private val card = TransportCard("123", null, null, passes = listOf(expired, october), trips = emptyList(), readOn = today)
+    private val expired =
+        TransportPass(TransportPass.Type.OTHER, 1, LocalDate(2026, 9, 1), LocalDate(2026, 9, 30), null)
+    private val october =
+        TransportPass(TransportPass.Type.OTHER, 2, LocalDate(2026, 9, 28), LocalDate(2026, 10, 31), null)
+    private val card =
+        TransportCard("123", null, null, passes = listOf(expired, october), trips = emptyList(), readOn = today)
 
     /** The screen collecting the state; cancel the returned job to "leave the screen". */
     private fun TestScope.showScreen() = backgroundScope.launch { viewModel.uiState.collect {} }
@@ -100,7 +103,10 @@ class TransportCardViewModelTest {
         assertEquals(TransportCardUiState.Reading, viewModel.uiState.value)
 
         tap(CardRead.Success(card))
-        assertEquals(TransportCardUiState.CardShown(card.copy(passes = listOf(october, expired))), viewModel.uiState.value)
+        assertEquals(
+            TransportCardUiState.CardShown(card.copy(passes = listOf(october, expired))),
+            viewModel.uiState.value,
+        )
     }
 
     @Test

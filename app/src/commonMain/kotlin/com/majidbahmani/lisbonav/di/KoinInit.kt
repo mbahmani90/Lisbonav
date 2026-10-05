@@ -1,5 +1,7 @@
 package com.majidbahmani.lisbonav.di
 
+import com.majidbahmani.lisbonav.analytics.Analytics
+import com.majidbahmani.lisbonav.analytics.NoOpAnalytics
 import com.majidbahmani.lisbonav.core.di.dataStoreModule
 import com.majidbahmani.lisbonav.core.di.httpEngineModule
 import com.majidbahmani.lisbonav.core.di.networkModule
@@ -7,8 +9,6 @@ import com.majidbahmani.lisbonav.feature.consent.di.consentModule
 import com.majidbahmani.lisbonav.feature.map.di.mapModule
 import com.majidbahmani.lisbonav.feature.transportcard.di.cardTapSourceModule
 import com.majidbahmani.lisbonav.feature.transportcard.di.transportCardModule
-import com.majidbahmani.lisbonav.analytics.Analytics
-import com.majidbahmani.lisbonav.analytics.NoOpAnalytics
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module

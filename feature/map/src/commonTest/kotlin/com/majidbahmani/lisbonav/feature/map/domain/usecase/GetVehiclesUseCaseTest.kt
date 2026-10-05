@@ -4,8 +4,6 @@ import com.majidbahmani.lisbonav.feature.map.domain.model.GeoPoint
 import com.majidbahmani.lisbonav.feature.map.domain.model.Vehicle
 import com.majidbahmani.lisbonav.feature.map.domain.model.VehicleStatus
 import com.majidbahmani.lisbonav.feature.map.fake.FakeVehicleRepository
-import kotlinx.coroutines.test.runTest
-import kotlinx.io.IOException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
@@ -15,6 +13,8 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
+import kotlinx.coroutines.test.runTest
+import kotlinx.io.IOException
 
 class GetVehiclesUseCaseTest {
 

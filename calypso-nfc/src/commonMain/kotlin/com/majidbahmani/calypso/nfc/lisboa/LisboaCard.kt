@@ -46,7 +46,10 @@ enum class LisboaTariff(val provider: Int, val code: Int) {
     ;
 
     companion object {
-        fun of(provider: Int, code: Int): LisboaTariff? = entries.firstOrNull { it.provider == provider && it.code == code }
+        fun of(provider: Int, code: Int): LisboaTariff? = entries.firstOrNull {
+            it.provider == provider &&
+                it.code == code
+        }
     }
 }
 

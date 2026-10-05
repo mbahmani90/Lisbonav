@@ -4,24 +4,39 @@ import com.majidbahmani.lisbonav.feature.transportcard.domain.model.CardRead
 import com.majidbahmani.lisbonav.feature.transportcard.domain.model.TransportCard
 import com.majidbahmani.lisbonav.feature.transportcard.domain.model.TransportPass
 import com.majidbahmani.lisbonav.feature.transportcard.fake.FakeTransportCardReader
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class ReadTransportCardUseCaseTest {
 
     private val today = LocalDate(2026, 10, 5)
 
     private fun pass(name: Int, start: LocalDate? = null, until: LocalDate? = null, balance: Int? = null) =
-        TransportPass(TransportPass.Type.OTHER, tariffCode = name, startDate = start, validUntil = until, balanceCents = balance)
+        TransportPass(
+            TransportPass.Type.OTHER,
+            tariffCode = name,
+            startDate = start,
+            validUntil = until,
+            balanceCents = balance,
+        )
 
     private fun card(passes: List<TransportPass>) =
-        TransportCard(number = "1", holderBirthDate = null, validUntil = null, passes = passes, trips = emptyList(), readOn = today)
+        TransportCard(
+            number = "1",
+            holderBirthDate = null,
+            validUntil = null,
+            passes = passes,
+            trips = emptyList(),
+            readOn = today,
+        )
 
     private suspend fun orderOf(vararg passes: TransportPass): List<Int> {
-        val reads = ReadTransportCardUseCase(FakeTransportCardReader(listOf(CardRead.Success(card(passes.toList()))))).invoke().toList()
+        val reads = ReadTransportCardUseCase(
+            FakeTransportCardReader(listOf(CardRead.Success(card(passes.toList())))),
+        ).invoke().toList()
         return (reads.single() as CardRead.Success).card.passes.map { it.tariffCode }
     }
 
@@ -55,7 +70,9 @@ class ReadTransportCardUseCaseTest {
     fun tripsAndOtherCardFields_areKept() = runTest {
         val card = card(listOf(pass(1))).copy(number = "123", validUntil = LocalDate(2029, 3, 1))
 
-        val read = ReadTransportCardUseCase(FakeTransportCardReader(listOf(CardRead.Success(card)))).invoke().toList().single()
+        val read = ReadTransportCardUseCase(
+            FakeTransportCardReader(listOf(CardRead.Success(card))),
+        ).invoke().toList().single()
 
         assertEquals(CardRead.Success(card), read)
     }

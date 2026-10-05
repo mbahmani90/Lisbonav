@@ -20,7 +20,11 @@ class RawCalypsoDump(
     fun toDebugString(): String = buildString {
         appendLine("SELECT 1TIC.ICA → $selectResponse")
         files.forEach { file ->
-            appendLine("${file.file} (SFI ${file.file.sfi.toString(16).uppercase()}): ${file.records.size} record(s), stop ${file.stopStatus}")
+            appendLine(
+                "${file.file} (SFI ${file.file.sfi.toString(
+                    16,
+                ).uppercase()}): ${file.records.size} record(s), stop ${file.stopStatus}",
+            )
             file.records.forEachIndexed { i, record -> appendLine("  #${i + 1} ${record.toHex()}") }
         }
     }

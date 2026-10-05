@@ -1,7 +1,9 @@
 package com.majidbahmani.calypso.nfc
 
 /** Upper-case hex without separators, e.g. `90 00` → "9000". */
-fun ByteArray.toHex(): String = joinToString("") { byte -> (byte.toInt() and 0xFF).toString(16).padStart(2, '0') }.uppercase()
+fun ByteArray.toHex(): String = joinToString("") { byte ->
+    (byte.toInt() and 0xFF).toString(16).padStart(2, '0')
+}.uppercase()
 
 /** Parses hex like "00A4 0400" (spaces ignored). */
 fun String.hexToBytes(): ByteArray {

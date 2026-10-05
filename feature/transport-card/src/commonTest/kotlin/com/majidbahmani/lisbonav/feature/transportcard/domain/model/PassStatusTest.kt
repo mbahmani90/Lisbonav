@@ -1,15 +1,21 @@
 package com.majidbahmani.lisbonav.feature.transportcard.domain.model
 
-import kotlinx.datetime.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.datetime.LocalDate
 
 class PassStatusTest {
 
     private val today = LocalDate(2026, 10, 5)
 
     private fun pass(start: LocalDate? = null, until: LocalDate? = null, balance: Int? = null) =
-        TransportPass(TransportPass.Type.OTHER, tariffCode = 900, startDate = start, validUntil = until, balanceCents = balance)
+        TransportPass(
+            TransportPass.Type.OTHER,
+            tariffCode = 900,
+            startDate = start,
+            validUntil = until,
+            balanceCents = balance,
+        )
 
     @Test
     fun withinItsPeriod_isActive_includingTheFirstAndLastDay() {

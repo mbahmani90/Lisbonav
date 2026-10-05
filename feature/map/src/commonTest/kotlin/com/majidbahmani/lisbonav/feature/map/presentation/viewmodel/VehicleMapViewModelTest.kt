@@ -1,5 +1,6 @@
 package com.majidbahmani.lisbonav.feature.map.presentation.viewmodel
 
+import androidx.compose.runtime.snapshots.Snapshot
 import com.majidbahmani.lisbonav.analytics.AnalyticsEvent
 import com.majidbahmani.lisbonav.feature.map.domain.model.GeoPoint
 import com.majidbahmani.lisbonav.feature.map.domain.model.Vehicle
@@ -8,7 +9,13 @@ import com.majidbahmani.lisbonav.feature.map.domain.usecase.GetVehiclesUseCase
 import com.majidbahmani.lisbonav.feature.map.fake.FakeAnalytics
 import com.majidbahmani.lisbonav.feature.map.fake.FakeVehicleRepository
 import com.majidbahmani.lisbonav.feature.map.presentation.viewmodel.VehicleMapUiState.ErrorReason
-import androidx.compose.runtime.snapshots.Snapshot
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -20,13 +27,6 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlinx.io.IOException
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class VehicleMapViewModelTest {

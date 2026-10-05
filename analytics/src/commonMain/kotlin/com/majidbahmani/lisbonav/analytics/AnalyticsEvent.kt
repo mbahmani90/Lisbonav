@@ -21,7 +21,9 @@ data class AnalyticsEvent(
                 is String -> require(value.length <= MAX_STRING_VALUE_LENGTH) {
                     "Parameter '$key' is longer than $MAX_STRING_VALUE_LENGTH characters"
                 }
+
                 is Long, is Double -> Unit
+
                 else -> throw IllegalArgumentException(
                     "Parameter '$key' must be a String, Long or Double, not ${value::class.simpleName}",
                 )

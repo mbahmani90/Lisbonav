@@ -2,14 +2,14 @@ package com.majidbahmani.lisbonav.feature.map.data.repository
 
 import com.majidbahmani.lisbonav.feature.map.data.remote.dto.VehicleDto
 import com.majidbahmani.lisbonav.feature.map.fake.FakeCarrisMetropolitanaApi
-import kotlinx.coroutines.test.runTest
-import kotlinx.io.IOException
-import kotlinx.serialization.SerializationException
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertSame
+import kotlinx.coroutines.test.runTest
+import kotlinx.io.IOException
+import kotlinx.serialization.SerializationException
 
 class VehicleRepositoryImplTest {
 

@@ -12,7 +12,9 @@ internal class BitReader(private val bytes: ByteArray) {
     /** The next [count] bits (1..63) as an unsigned number. */
     fun read(count: Int): Long {
         require(count in 1..63) { "Can read 1..63 bits at once, asked $count" }
-        require(position + count <= bytes.size * 8) { "Reading $count bits at $position passes the end (${bytes.size * 8} bits)" }
+        require(position + count <= bytes.size * 8) {
+            "Reading $count bits at $position passes the end (${bytes.size * 8} bits)"
+        }
         var value = 0L
         repeat(count) {
             val byte = bytes[position / 8].toInt() and 0xFF

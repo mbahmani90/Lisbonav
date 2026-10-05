@@ -44,10 +44,10 @@ import com.majidbahmani.lisbonav.feature.transportcard.presentation.viewmodel.Tr
 import com.majidbahmani.lisbonav.feature.transportcard.presentation.viewmodel.TransportCardViewModel
 import com.majidbahmani.lisbonav.feature.transportcard.resources.Res
 import com.majidbahmani.lisbonav.feature.transportcard.resources.card_birth_date
-import com.majidbahmani.lisbonav.feature.transportcard.resources.card_error_no_nfc
-import com.majidbahmani.lisbonav.feature.transportcard.resources.card_error_no_nfc_hint
 import com.majidbahmani.lisbonav.feature.transportcard.resources.card_error_nfc_off
 import com.majidbahmani.lisbonav.feature.transportcard.resources.card_error_nfc_off_hint
+import com.majidbahmani.lisbonav.feature.transportcard.resources.card_error_no_nfc
+import com.majidbahmani.lisbonav.feature.transportcard.resources.card_error_no_nfc_hint
 import com.majidbahmani.lisbonav.feature.transportcard.resources.card_error_not_navegante
 import com.majidbahmani.lisbonav.feature.transportcard.resources.card_error_not_navegante_hint
 import com.majidbahmani.lisbonav.feature.transportcard.resources.card_error_removed
@@ -134,8 +134,15 @@ fun TransportCardScreen(
             Box(Modifier.padding(bottom = contentPadding.calculateBottomPadding())) {
                 when (uiState) {
                     TransportCardUiState.Waiting -> Prompt(title = Res.string.card_title, hint = Res.string.card_hint)
-                    TransportCardUiState.Reading -> Prompt(title = Res.string.card_reading, hint = null, isReading = true)
+
+                    TransportCardUiState.Reading -> Prompt(
+                        title = Res.string.card_reading,
+                        hint = null,
+                        isReading = true,
+                    )
+
                     is TransportCardUiState.Error -> ErrorPrompt(uiState.reason, onRetry, onOpenNfcSettings)
+
                     is TransportCardUiState.CardShown -> Unit
                 }
             }
@@ -151,10 +158,16 @@ private fun ErrorPrompt(reason: Reason, onRetry: () -> Unit, onOpenNfcSettings: 
             onOpenNfcSettings?.let { Button(onClick = it) { Text(stringResource(Res.string.card_open_settings)) } }
             OutlinedButton(onClick = onRetry) { Text(stringResource(Res.string.card_try_again)) }
         }
+
         Reason.NFC_NOT_SUPPORTED -> Prompt(Res.string.card_error_no_nfc, Res.string.card_error_no_nfc_hint)
+
         // Still reading: the next tap is read without any button.
         Reason.CARD_REMOVED -> Prompt(Res.string.card_error_removed, Res.string.card_error_removed_hint)
-        Reason.NOT_A_NAVEGANTE_CARD -> Prompt(Res.string.card_error_not_navegante, Res.string.card_error_not_navegante_hint)
+
+        Reason.NOT_A_NAVEGANTE_CARD -> Prompt(
+            Res.string.card_error_not_navegante,
+            Res.string.card_error_not_navegante_hint,
+        )
     }
 }
 
@@ -204,10 +217,17 @@ private fun CardDetails(card: TransportCard, bottomPadding: Dp) {
         item(key = "header") {
             Column(Modifier.padding(bottom = 16.dp)) {
                 Text(
-                    text = card.number?.let { stringResource(Res.string.card_number, it) } ?: stringResource(Res.string.card_number_unknown),
+                    text =
+                        card.number?.let { stringResource(Res.string.card_number, it) }
+                            ?: stringResource(Res.string.card_number_unknown),
                     style = MaterialTheme.typography.headlineSmall,
                 )
-                card.validUntil?.let { Text(stringResource(Res.string.card_valid_until, it.formatted()), style = MaterialTheme.typography.bodyMedium) }
+                card.validUntil?.let {
+                    Text(
+                        stringResource(Res.string.card_valid_until, it.formatted()),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
                 card.holderBirthDate?.let {
                     Text(
                         text = stringResource(Res.string.card_birth_date, it.formatted()),
@@ -246,8 +266,11 @@ private fun PassRow(pass: TransportPass, status: PassStatus) {
     val detail = when (status) {
         PassStatus.ACTIVE -> pass.validUntil?.let { stringResource(Res.string.pass_active_until, it.formatted()) }
             ?: stringResource(Res.string.pass_active)
+
         PassStatus.NOT_STARTED -> stringResource(Res.string.pass_starts, pass.startDate?.formatted().orEmpty())
+
         PassStatus.STORED_VALUE -> stringResource(Res.string.pass_balance, euros(pass.balanceCents ?: 0))
+
         PassStatus.EXPIRED -> stringResource(Res.string.pass_expired, pass.validUntil?.formatted().orEmpty())
     }
     val isExpired = status == PassStatus.EXPIRED
@@ -260,12 +283,20 @@ private fun PassRow(pass: TransportPass, status: PassStatus) {
             Text(
                 text = name,
                 style = MaterialTheme.typography.titleMedium,
-                color = if (isExpired) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
+                color = if (isExpired) {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
             )
             Text(
                 text = detail,
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (isExpired) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
+                color = if (isExpired) {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                } else {
+                    MaterialTheme.colorScheme.primary
+                },
             )
         }
     }
@@ -291,7 +322,11 @@ private fun TripRow(trip: CardTrip) {
     ) {
         Column(Modifier.weight(1f)) {
             Text(stringResource(operator), style = MaterialTheme.typography.titleSmall)
-            Text(stringResource(kind), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                stringResource(kind),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
         Text(trip.time.formatted(), style = MaterialTheme.typography.bodyMedium)
     }

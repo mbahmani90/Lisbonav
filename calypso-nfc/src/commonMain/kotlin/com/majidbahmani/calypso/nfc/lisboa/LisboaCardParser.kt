@@ -69,10 +69,13 @@ object LisboaCardParser {
 
         val validUntil = when {
             start == null -> null
+
             periodUnits == PERIOD_UNIT_DAYS -> start.plus(DatePeriod(days = period - 1))
+
             // Calendar months: valid until the end of the month `period` months after the start month.
             periodUnits == PERIOD_UNIT_MONTHS ->
                 LocalDate(start.year, start.month, 1).plus(DatePeriod(months = period)).minus(DatePeriod(days = 1))
+
             else -> null
         }
         val isZapping = LisboaTariff.of(provider, tariff) == LisboaTariff.ZAPPING
@@ -140,11 +143,14 @@ object LisboaCardParser {
 
     /** Latin-1 text, without the zero / space padding. */
     private fun ByteArray.latin1Text(): String? =
-        map { (it.toInt() and 0xFF).toChar() }.joinToString("").trim { it == ' ' || it == '\u0000' }.takeIf { it.isNotEmpty() }
+        map {
+            (it.toInt() and 0xFF).toChar()
+        }.joinToString("").trim { it == ' ' || it == '\u0000' }.takeIf { it.isNotEmpty() }
 
     private fun ByteArray.uint24At(offset: Int): Int? {
         if (offset + 3 > size) return null
-        return ((this[offset].toInt() and 0xFF) shl 16) or ((this[offset + 1].toInt() and 0xFF) shl 8) or (this[offset + 2].toInt() and 0xFF)
+        return ((this[offset].toInt() and 0xFF) shl 16) or ((this[offset + 1].toInt() and 0xFF) shl 8) or
+            (this[offset + 2].toInt() and 0xFF)
     }
 
     private fun ByteArray.isAllZero() = all { it == 0.toByte() }

@@ -7,11 +7,11 @@ import com.majidbahmani.lisbonav.analytics.Analytics
 import com.majidbahmani.lisbonav.analytics.AnalyticsEvent
 import com.majidbahmani.lisbonav.feature.consent.domain.model.AnalyticsConsent
 import com.majidbahmani.lisbonav.feature.consent.domain.repository.ConsentRepository
+import kotlin.random.Random
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import okio.FileSystem
 import okio.Path
-import kotlin.random.Random
 
 /** In memory; [saved] is what the user answered (null: not yet). */
 class FakeConsentRepository(answer: AnalyticsConsent? = null) : ConsentRepository {

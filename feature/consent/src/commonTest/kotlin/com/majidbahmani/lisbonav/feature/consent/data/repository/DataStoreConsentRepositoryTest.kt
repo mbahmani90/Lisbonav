@@ -6,13 +6,13 @@ import com.majidbahmani.lisbonav.feature.consent.domain.model.AnalyticsConsent
 import com.majidbahmani.lisbonav.feature.consent.fake.createTestDataStore
 import com.majidbahmani.lisbonav.feature.consent.fake.deleteDataStoreFile
 import com.majidbahmani.lisbonav.feature.consent.fake.newDataStorePath
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.runTest
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 
 /** With a real DataStore on a temporary file (doc 28). */
 class DataStoreConsentRepositoryTest {

@@ -5,12 +5,12 @@ import com.majidbahmani.calypso.nfc.BitWriter
 import com.majidbahmani.calypso.nfc.CalypsoFile
 import com.majidbahmani.calypso.nfc.RawCalypsoDump
 import com.majidbahmani.calypso.nfc.RawFile
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 /**
  * Synthetic records built field by field (no real card data). Days count from 1997-01-01:
@@ -35,7 +35,14 @@ class LisboaCardParserTest {
         .write(0, 5).write(0, 19).write(units, 16).write(0, 14).write(period, 7)
         .toByteArray()
 
-    private fun trip(time: LocalDateTime, transition: Int, provider: Int, slotsBitmap: Int, route: Int, location: Int): ByteArray {
+    private fun trip(
+        time: LocalDateTime,
+        transition: Int,
+        provider: Int,
+        slotsBitmap: Int,
+        route: Int,
+        location: Int,
+    ): ByteArray {
         val seconds = days(time.date).toLong() * 86_400 + time.hour * 3600 + time.minute * 60 + time.second
         return BitWriter()
             .write(seconds, 30).write(0, 3).write(0, 30).write(0, 5).write(slotsBitmap, 4).write(0, 29)
@@ -45,16 +52,23 @@ class LisboaCardParserTest {
     }
 
     private fun dump(vararg files: Pair<CalypsoFile, List<ByteArray>>, calypso: Boolean = true) = RawCalypsoDump(
-        selectResponse = ApduResponse(ByteArray(0), if (calypso) ApduResponse.SW_SUCCESS else ApduResponse.SW_FILE_NOT_FOUND),
+        selectResponse = ApduResponse(
+            ByteArray(0),
+            if (calypso) ApduResponse.SW_SUCCESS else ApduResponse.SW_FILE_NOT_FOUND,
+        ),
         files = files.map { (file, records) -> RawFile(file, records, stopStatus = null) },
     )
 
-    private val zapping = contract(provider = 31, tariff = 33592, start = LocalDate(2025, 3, 1), units = 0xE10, period = 62)
-    private val monthlyPass = contract(provider = 31, tariff = 900, start = LocalDate(2026, 9, 28), units = 0x10A, period = 2)
+    private val zapping =
+        contract(provider = 31, tariff = 33592, start = LocalDate(2025, 3, 1), units = 0xE10, period = 62)
+    private val monthlyPass =
+        contract(provider = 31, tariff = 900, start = LocalDate(2026, 9, 28), units = 0x10A, period = 2)
 
     @Test
     fun notCalypso_orNotPortugal_returnsNull() {
-        assertNull(LisboaCardParser.parse(dump(CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment()), calypso = false)))
+        assertNull(
+            LisboaCardParser.parse(dump(CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment()), calypso = false)),
+        )
         assertNull(LisboaCardParser.parse(dump(CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment(country = 0x250)))))
         assertNull(LisboaCardParser.parse(dump()))
     }
@@ -70,8 +84,16 @@ class LisboaCardParserTest {
 
     @Test
     fun birthDate_notBcdOrZero_isNull() {
-        assertNull(LisboaCardParser.parse(dump(CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment(birthBcd = 0x1990_0A15))))!!.holderBirthDate)
-        assertNull(LisboaCardParser.parse(dump(CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment(birthBcd = 0))))!!.holderBirthDate)
+        assertNull(
+            LisboaCardParser.parse(
+                dump(CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment(birthBcd = 0x1990_0A15))),
+            )!!.holderBirthDate,
+        )
+        assertNull(
+            LisboaCardParser.parse(
+                dump(CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment(birthBcd = 0))),
+            )!!.holderBirthDate,
+        )
     }
 
     @Test
@@ -86,8 +108,18 @@ class LisboaCardParserTest {
 
     @Test
     fun engravedSerial_fromIccBytes16to19_andMissingFilesAreNull() {
-        val icc = ByteArray(29).also { it[16] = 0x00; it[17] = 0x12; it[18] = 0x34; it[19] = 0x56 }
-        val withIcc = LisboaCardParser.parse(dump(CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment()), CalypsoFile.ICC to listOf(icc)))!!
+        val icc = ByteArray(29).also {
+            it[16] = 0x00
+            it[17] = 0x12
+            it[18] = 0x34
+            it[19] = 0x56
+        }
+        val withIcc = LisboaCardParser.parse(
+            dump(
+                CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment()),
+                CalypsoFile.ICC to listOf(icc),
+            ),
+        )!!
         val without = LisboaCardParser.parse(dump(CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment())))!!
 
         assertEquals(0x123456L, withIcc.engravedSerialNumber)
@@ -120,7 +152,12 @@ class LisboaCardParserTest {
     @Test
     fun contract_validForDays() {
         val tenDays = contract(provider = 31, tariff = 906, start = LocalDate(2026, 10, 1), units = 0x109, period = 10)
-        val card = LisboaCardParser.parse(dump(CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment()), CalypsoFile.CONTRACTS to listOf(tenDays)))!!
+        val card = LisboaCardParser.parse(
+            dump(
+                CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment()),
+                CalypsoFile.CONTRACTS to listOf(tenDays),
+            ),
+        )!!
 
         assertEquals(LisboaTariff.NAVEGANTE_LISBOA, card.contracts.single().knownTariff)
         assertEquals(LocalDate(2026, 10, 10), card.contracts.single().validUntil)
@@ -132,8 +169,22 @@ class LisboaCardParserTest {
             dump(
                 CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment()),
                 CalypsoFile.EVENT_LOG to listOf(
-                    trip(LocalDateTime(2026, 10, 2, 21, 7, 30), transition = 4, provider = 2, slotsBitmap = 0b0010, route = 5, location = 17),
-                    trip(LocalDateTime(2026, 10, 2, 19, 41, 0), transition = 1, provider = 1, slotsBitmap = 0b0011, route = 735, location = 3),
+                    trip(
+                        LocalDateTime(2026, 10, 2, 21, 7, 30),
+                        transition = 4,
+                        provider = 2,
+                        slotsBitmap = 0b0010,
+                        route = 5,
+                        location = 17,
+                    ),
+                    trip(
+                        LocalDateTime(2026, 10, 2, 19, 41, 0),
+                        transition = 1,
+                        provider = 1,
+                        slotsBitmap = 0b0011,
+                        route = 735,
+                        location = 3,
+                    ),
                     ByteArray(29),
                 ),
             ),
@@ -154,8 +205,21 @@ class LisboaCardParserTest {
 
     @Test
     fun unknownOperatorAndTransition() {
-        val other = trip(LocalDateTime(2026, 1, 1, 8, 0), transition = 6, provider = 20, slotsBitmap = 0, route = 0, location = 0)
-        val trip = LisboaCardParser.parse(dump(CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment()), CalypsoFile.EVENT_LOG to listOf(other)))!!.trips.single()
+        val other =
+            trip(
+                LocalDateTime(2026, 1, 1, 8, 0),
+                transition = 6,
+                provider = 20,
+                slotsBitmap = 0,
+                route = 0,
+                location = 0,
+            )
+        val trip = LisboaCardParser.parse(
+            dump(
+                CalypsoFile.ENVIRONMENT_HOLDER to listOf(environment()),
+                CalypsoFile.EVENT_LOG to listOf(other),
+            ),
+        )!!.trips.single()
 
         assertNull(trip.operator)
         assertEquals(20, trip.provider)

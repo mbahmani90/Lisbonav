@@ -3,8 +3,8 @@ package com.majidbahmani.lisbonav.navigation
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.majidbahmani.lisbonav.feature.transportcard.TransportCardRoute
 import com.majidbahmani.lisbonav.feature.map.MapRoute
+import com.majidbahmani.lisbonav.feature.transportcard.TransportCardRoute
 import com.majidbahmani.lisbonav.resources.Res
 import com.majidbahmani.lisbonav.resources.ic_card
 import com.majidbahmani.lisbonav.resources.ic_map
