@@ -10,6 +10,25 @@ A Kotlin Multiplatform app for getting around Lisbon, for **Android and iOS** fr
 
 > Work in progress. See the [roadmap](#roadmap) for what's done.
 
+## Screenshots
+
+**Live bus map:** all buses in real time (tap one to see its line), and the search for one line.
+
+<p>
+  <img src="art/screenshots/map-live.png" alt="Map screen: live Carris Metropolitana buses, one marker selected showing its line" width="260">
+  &nbsp;
+  <img src="art/screenshots/map-search.png" alt="Map screen: buses filtered to line 1515 with the search bar" width="260">
+</p>
+
+**Navegante card reader:** waiting for a card, then the card's passes and recent trips
+(the card number and date of birth are hidden).
+
+<p>
+  <img src="art/screenshots/card-waiting.png" alt="Card screen waiting for a card: hold your Navegante card to the phone" width="260">
+  &nbsp;
+  <img src="art/screenshots/card-screen.png" alt="Card screen: a Navegante card read over NFC, showing a monthly pass, the Zapping balance and recent trips" width="260">
+</p>
+
 ## Tech stack
 
 | Concern | Library |

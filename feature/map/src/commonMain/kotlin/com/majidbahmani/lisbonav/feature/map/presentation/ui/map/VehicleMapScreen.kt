@@ -142,8 +142,8 @@ private fun LineSearchBar(
         modifier = modifier
             .fillMaxWidth()
             .height(SearchBarHeight)
-            // Light grey, slightly transparent so the map shows through; text and icons stay opaque.
-            .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.7f), shape)
+            // Same as the bottom bar: slightly transparent so the map shows through; text and icons stay opaque.
+            .background(MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.7f), shape)
             .border(1.dp, if (isFocused) MaterialTheme.colorScheme.primary else Color.Transparent, shape),
         textStyle = textStyle,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
