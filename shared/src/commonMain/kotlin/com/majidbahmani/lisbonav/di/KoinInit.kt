@@ -5,7 +5,7 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
 /** Every module of the app; also used by the module test. */
-internal val appModules = listOf(platformModule, networkModule, repositoryModule)
+internal val appModules = listOf(platformModule, networkModule, repositoryModule, useCaseModule)
 
 /**
  * Starts Koin once per process. Android calls it from `LisbonavApp` (adding `androidContext`),

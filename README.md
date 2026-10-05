@@ -41,7 +41,8 @@ shared/src/
 ├── commonMain/…/lisbonav/
 │   ├── domain/
 │   │   ├── model/            # Vehicle, GeoPoint, VehicleStatus (plain Kotlin)
-│   │   └── repository/       # VehicleRepository interface
+│   │   ├── repository/       # VehicleRepository interface
+│   │   └── usecase/          # GetVehiclesUseCase: hides buses 5+ min behind the rest of the feed
 │   ├── data/
 │   │   ├── remote/           # Ktor API client, DTOs, HttpClient factory
 │   │   ├── mapper/           # DTO → domain (drops vehicles without a usable position)
