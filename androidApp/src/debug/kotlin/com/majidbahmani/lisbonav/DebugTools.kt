@@ -1,6 +1,7 @@
 package com.majidbahmani.lisbonav
 
 import android.app.Application
+import android.nfc.tech.IsoDep
 import android.util.Log
 import com.majidbahmani.calypso.nfc.CalypsoReader
 import com.majidbahmani.calypso.nfc.IsoDepTransport
@@ -34,22 +35,28 @@ object DebugTools {
         MainScope().launch {
             while (isActive) {
                 try {
-                    val isoDep = tagReader.awaitIsoDep()
-                    Log.d(TAG, "Card tapped, reading…")
-                    IsoDepTransport(isoDep).use { transport ->
-                        val dump = CalypsoReader(transport).readRaw()
-                        dump.toDebugString().lines().filter { it.isNotBlank() }.forEach { Log.d(TAG, it) }
-                    }
+                    // Reader mode stays on while collecting, so the connection to the card survives the read.
+                    tagReader.cardTaps().collect { isoDep -> dump(isoDep) }
                 } catch (e: NfcUnavailableException) {
                     Log.w(TAG, "NFC unavailable (${e.reason}); retrying in 5 s")
                     delay(5_000)
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Exception) {
-                    // Usually TagLostException: the card was moved away too early.
-                    Log.w(TAG, "Read failed: ${e::class.simpleName}: ${e.message}")
                 }
             }
+        }
+    }
+
+    private suspend fun dump(isoDep: IsoDep) {
+        Log.d(TAG, "Card tapped, reading…")
+        try {
+            IsoDepTransport(isoDep).use { transport ->
+                val dump = CalypsoReader(transport).readRaw()
+                dump.toDebugString().lines().filter { it.isNotBlank() }.forEach { Log.d(TAG, it) }
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            // Usually TagLostException: the card was moved away too early.
+            Log.w(TAG, "Read failed: ${e::class.simpleName}: ${e.message}")
         }
     }
 }

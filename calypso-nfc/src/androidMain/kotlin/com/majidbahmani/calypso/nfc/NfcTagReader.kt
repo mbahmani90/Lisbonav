@@ -8,35 +8,38 @@ import android.nfc.tech.IsoDep
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import kotlinx.coroutines.CancellableContinuation
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import java.lang.ref.WeakReference
-import kotlin.coroutines.resume
+import java.util.concurrent.CopyOnWriteArraySet
 
 /**
- * Waits for an ISO 14443-4 card (Calypso, DESFire, EMV, …) using NFC reader mode.
+ * Cards tapped on the phone, as ISO 14443-4 [IsoDep] (Calypso, DESFire, EMV, …), using NFC reader mode.
  *
- * Reader mode only works for a resumed Activity, so this follows the app's activities through
- * [Application.ActivityLifecycleCallbacks] (weak reference, no leak) and turns reader mode on only
- * while [awaitIsoDep] is waiting. Create it once, in `Application.onCreate`.
+ * Reader mode stays on while [cardTaps] is collected: turning it off resets the NFC radio and
+ * would cut the connection to a card that is still being read. Reader mode only works for a
+ * resumed Activity, so this follows the app's activities through
+ * [Application.ActivityLifecycleCallbacks] (weak reference, no leak). Create it once, in
+ * `Application.onCreate`.
  */
 class NfcTagReader(application: Application) {
 
     private val adapter: NfcAdapter? = NfcAdapter.getDefaultAdapter(application)
     private val mainHandler = Handler(Looper.getMainLooper())
 
-    // Both only touched on the main thread.
+    /** One per active collector; called on a binder thread. */
+    private val listeners = CopyOnWriteArraySet<(IsoDep) -> Unit>()
+
+    // Only touched on the main thread.
     private var resumedActivity: WeakReference<Activity>? = null
-    private var waiting: CancellableContinuation<IsoDep>? = null
 
     init {
         application.registerActivityLifecycleCallbacks(
             object : ActivityLifecycleCallbacksAdapter() {
                 override fun onActivityResumed(activity: Activity) {
                     resumedActivity = WeakReference(activity)
-                    if (waiting != null) enableReaderMode(activity)
+                    if (listeners.isNotEmpty()) enableReaderMode(activity)
                 }
 
                 override fun onActivityPaused(activity: Activity) {
@@ -52,24 +55,22 @@ class NfcTagReader(application: Application) {
     val isSupported: Boolean get() = adapter != null
 
     /**
-     * Suspends until a card is tapped and returns it as [IsoDep] (not yet connected).
-     * Throws [NfcUnavailableException] without NFC. Cancelling stops reader mode.
+     * Emits each tapped card (not yet connected). Read the card inside `collect`: reader mode stays
+     * on until collection stops. Fails with [NfcUnavailableException] without NFC.
      */
-    suspend fun awaitIsoDep(): IsoDep = withContext(Dispatchers.Main.immediate) {
+    fun cardTaps(): Flow<IsoDep> = callbackFlow {
         val adapter = adapter ?: throw NfcUnavailableException(NfcUnavailableException.Reason.NOT_SUPPORTED)
         if (!adapter.isEnabled) throw NfcUnavailableException(NfcUnavailableException.Reason.DISABLED)
 
-        suspendCancellableCoroutine { continuation ->
-            check(waiting == null) { "Only one awaitIsoDep() at a time" }
-            waiting = continuation
+        val listener: (IsoDep) -> Unit = { isoDep -> trySend(isoDep) }
+        mainHandler.post {
+            listeners += listener
             resumedActivity?.get()?.let(::enableReaderMode)
-            continuation.invokeOnCancellation {
-                mainHandler.post {
-                    if (waiting === continuation) {
-                        waiting = null
-                        resumedActivity?.get()?.let(::disableReaderMode)
-                    }
-                }
+        }
+        awaitClose {
+            mainHandler.post {
+                listeners -= listener
+                if (listeners.isEmpty()) resumedActivity?.get()?.let(::disableReaderMode)
             }
         }
     }
@@ -77,12 +78,7 @@ class NfcTagReader(application: Application) {
     /** Called by Android on a binder thread. Tags without IsoDep (e.g. MIFARE Classic) are ignored. */
     private fun onTagDiscovered(tag: Tag) {
         val isoDep = IsoDep.get(tag) ?: return
-        mainHandler.post {
-            val continuation = waiting ?: return@post
-            waiting = null
-            resumedActivity?.get()?.let(::disableReaderMode)
-            if (continuation.isActive) continuation.resume(isoDep)
-        }
+        listeners.forEach { it(isoDep) }
     }
 
     private fun enableReaderMode(activity: Activity) {
