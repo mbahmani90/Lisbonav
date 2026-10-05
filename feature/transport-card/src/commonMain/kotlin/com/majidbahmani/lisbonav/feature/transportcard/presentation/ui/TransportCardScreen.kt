@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
@@ -29,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.majidbahmani.lisbonav.feature.transportcard.domain.model.CardRead.Reason
@@ -91,6 +94,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun TransportCardRoute(
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     viewModel: TransportCardViewModel = koinViewModel(),
 ) {
     // Lifecycle-aware: stops collecting in the background, which stops NFC reading (WhileSubscribed(0)).
@@ -101,27 +105,40 @@ fun TransportCardRoute(
         onRetry = viewModel::retry,
         onOpenNfcSettings = rememberOpenNfcSettings(),
         modifier = modifier,
+        contentPadding = contentPadding,
     )
 }
 
-/** Stateless: renders the state; [onOpenNfcSettings] is null where there are no NFC settings (iOS). */
+/**
+ * Stateless: renders the state; [onOpenNfcSettings] is null where there are no NFC settings (iOS).
+ * [contentPadding]: space taken by the app's floating bars (it already includes the system bar below them).
+ */
 @Composable
 fun TransportCardScreen(
     uiState: TransportCardUiState,
     onRetry: () -> Unit,
     onOpenNfcSettings: (() -> Unit)?,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.safeDrawing),
+            // The bottom comes from contentPadding: the list scrolls behind the floating bar.
+            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)),
     ) {
-        when (uiState) {
-            is TransportCardUiState.CardShown -> CardDetails(card = uiState.card)
-            TransportCardUiState.Waiting -> Prompt(title = Res.string.card_title, hint = Res.string.card_hint)
-            TransportCardUiState.Reading -> Prompt(title = Res.string.card_reading, hint = null, isReading = true)
-            is TransportCardUiState.Error -> ErrorPrompt(uiState.reason, onRetry, onOpenNfcSettings)
+        if (uiState is TransportCardUiState.CardShown) {
+            CardDetails(card = uiState.card, bottomPadding = contentPadding.calculateBottomPadding())
+        } else {
+            // Prompts are centred in the space above the bar.
+            Box(Modifier.padding(bottom = contentPadding.calculateBottomPadding())) {
+                when (uiState) {
+                    TransportCardUiState.Waiting -> Prompt(title = Res.string.card_title, hint = Res.string.card_hint)
+                    TransportCardUiState.Reading -> Prompt(title = Res.string.card_reading, hint = null, isReading = true)
+                    is TransportCardUiState.Error -> ErrorPrompt(uiState.reason, onRetry, onOpenNfcSettings)
+                    is TransportCardUiState.CardShown -> Unit
+                }
+            }
         }
     }
 }
@@ -178,10 +195,10 @@ private fun Prompt(
 }
 
 @Composable
-private fun CardDetails(card: TransportCard) {
+private fun CardDetails(card: TransportCard, bottomPadding: Dp) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 24.dp),
+        contentPadding = PaddingValues(start = 24.dp, top = 24.dp, end = 24.dp, bottom = 24.dp + bottomPadding),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         item(key = "header") {
@@ -311,7 +328,7 @@ private fun CardIllustration() {
             modifier = Modifier
                 .padding(start = 24.dp, top = 44.dp)
                 .size(width = 40.dp, height = 32.dp)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.25f), RoundedCornerShape(6.dp)),
+                .background(MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.25f), RoundedCornerShape(6.dp)),
         )
     }
 }

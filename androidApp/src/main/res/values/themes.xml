@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Window theme only (the window background before Compose draws); the UI theme is LisbonavTheme. -->
+    <style name="Theme.Lisbonav" parent="@android:style/Theme.Material.Light.NoActionBar" />
+</resources>
