@@ -1,0 +1,4 @@
+<resources>
+    <string name="nav_map">Map</string>
+    <string name="nav_card">Card</string>
+</resources>

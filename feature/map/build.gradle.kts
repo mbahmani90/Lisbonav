@@ -39,6 +39,7 @@ kotlin {
             implementation(libs.compose.components.resources)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.navigation.compose) // MapRoute + mapScreen() for the app's NavHost
 
             implementation(libs.ktor.client.core) // the Carris API calls it directly
             implementation(libs.kotlinx.serialization.json) // @Serializable DTOs

@@ -10,6 +10,21 @@ private val LightColors = lightColorScheme(
     onPrimary = Color.White,
     secondary = LisbonavColors.Yellow,
     onSecondary = LisbonavColors.Ink,
+    // Selected item indicator (e.g. the bottom bar pill): yellow with an ink icon.
+    secondaryContainer = LisbonavColors.Yellow,
+    onSecondaryContainer = LisbonavColors.Ink,
+    // Neutral surfaces instead of the default lavender-tinted ones.
+    background = Color.White,
+    onBackground = LisbonavColors.Ink,
+    surface = Color.White,
+    onSurface = LisbonavColors.Ink,
+    surfaceVariant = LisbonavColors.SurfaceVariant,
+    onSurfaceVariant = LisbonavColors.OnSurfaceVariant,
+    surfaceContainerLowest = Color.White,
+    surfaceContainerLow = LisbonavColors.SurfaceContainer,
+    surfaceContainer = LisbonavColors.SurfaceContainer,
+    surfaceContainerHigh = LisbonavColors.SurfaceContainer,
+    surfaceContainerHighest = LisbonavColors.SurfaceVariant,
 )
 
 /**

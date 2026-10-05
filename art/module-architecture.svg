@@ -68,7 +68,7 @@
   <text x="355" y="444" class="chipsub">map screen</text>
 
   <rect x="470" y="326" width="280" height="150" rx="12" fill="#F3E8FF" stroke="#9333EA" stroke-width="1.8"/>
-  <text x="610" y="350" class="name">feature:card</text>
+  <text x="610" y="350" class="name">feature:transport-card</text>
   <text x="610" y="368" class="desc">Navegante card: tap → passes, trips</text>
   <rect x="482" y="382" width="82" height="80" rx="8" fill="#FFFFFF" stroke="#9333EA"/>
   <text x="523" y="400" class="chip">data</text>
@@ -123,7 +123,7 @@
   <path d="M330 478 L520 548" class="dep"/>
   <path d="M640 478 L640 548" class="dep"/>
   <path d="M540 478 L350 548" class="dep"/>
-  <!-- app → core (between feature:card and calypso-nfc) -->
+  <!-- app → core (between feature:transport-card and calypso-nfc) -->
   <path d="M775 272 L775 520 L730 548" class="dep"/>
   <text x="783" y="510" class="small">app uses core</text>
   <!-- app → systemdesign (left side) -->
@@ -179,8 +179,8 @@
   <text x="1056" y="384" class="small" font-weight="700">Navigation Compose (KMP), type-safe routes:</text>
   <text x="1056" y="404" class="mono">@Serializable object MapRoute</text>
   <text x="1056" y="420" class="mono">fun NavGraphBuilder.mapScreen()</text>
-  <text x="1056" y="440" class="mono">@Serializable object CardRoute</text>
-  <text x="1056" y="456" class="mono">fun NavGraphBuilder.cardScreen()</text>
+  <text x="1056" y="440" class="mono">@Serializable object TransportCardRoute</text>
+  <text x="1056" y="456" class="mono">fun NavGraphBuilder.transportCardScreen()</text>
 
   <!-- ===================== MIGRATION ===================== -->
   <rect x="1040" y="500" width="320" height="390" rx="12" class="panel"/>
@@ -203,7 +203,7 @@
   <text x="1070" y="786" class="small">App.kt, Koin startup, Xcode Gradle script</text>
 
   <rect x="1056" y="812" width="288" height="66" rx="10" fill="#F3E8FF" stroke="#9333EA"/>
-  <text x="1070" y="834" font-size="13" font-weight="700" fill="#0F172A">5 · navigation + feature:card</text>
+  <text x="1070" y="834" font-size="13" font-weight="700" fill="#0F172A">5 · navigation + feature:transport-card</text>
   <text x="1070" y="852" class="small">NavHost + bottom bar (Map | Card); NFC</text>
   <text x="1070" y="867" class="small">continues there with calypso-nfc</text>
 </svg>
