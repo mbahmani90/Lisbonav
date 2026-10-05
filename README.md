@@ -2,7 +2,8 @@
 
 A Kotlin Multiplatform app for getting around Lisbon, for **Android and iOS** from one shared codebase.
 
-- **Live bus map:** real-time positions of Carris Metropolitana buses on a map.
+- **Live bus map:** real-time positions of Carris Metropolitana buses on a map, with a search bar
+  to show only one line.
 - **Navegante card reader** *(planned)*: read Lisbon's contactless transit card over NFC
   (Calypso) and show its passes and recent trips.
 

@@ -33,6 +33,7 @@ actual fun VehicleMap(
         // North stays up, so the heading pointers on the markers stay correct.
         uiSettings = MapUiSettings(
             mapToolbarEnabled = false,
+            zoomControlsEnabled = false, // pinch to zoom; matches iOS, which has no zoom buttons
             rotationGesturesEnabled = false,
             tiltGesturesEnabled = false,
         ),

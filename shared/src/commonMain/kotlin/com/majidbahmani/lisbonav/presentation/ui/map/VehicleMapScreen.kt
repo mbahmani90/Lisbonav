@@ -1,17 +1,28 @@
 package com.majidbahmani.lisbonav.presentation.ui.map
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -19,6 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.majidbahmani.lisbonav.presentation.viewmodel.VehicleMapUiState
@@ -27,8 +41,13 @@ import com.majidbahmani.lisbonav.presentation.viewmodel.VehicleMapViewModel
 import lisbonav.shared.generated.resources.Res
 import lisbonav.shared.generated.resources.error_no_connection
 import lisbonav.shared.generated.resources.error_service
+import lisbonav.shared.generated.resources.ic_close
+import lisbonav.shared.generated.resources.ic_search
 import lisbonav.shared.generated.resources.retry
+import lisbonav.shared.generated.resources.search_clear
+import lisbonav.shared.generated.resources.search_line_hint
 import lisbonav.shared.generated.resources.vehicle_line
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -43,15 +62,20 @@ fun VehicleMapRoute(
 
     VehicleMapScreen(
         uiState = uiState,
+        // Read directly (Compose state), not through uiState, so no keystroke is lost.
+        query = viewModel.query,
+        onQueryChange = viewModel::onQueryChange,
         onRetry = viewModel::retry,
         modifier = modifier,
     )
 }
 
-/** Stateless: the map fills the screen; loading and errors are shown on top of it. */
+/** Stateless: the map fills the screen; the search bar, loading and errors are shown on top of it. */
 @Composable
 fun VehicleMapScreen(
     uiState: VehicleMapUiState,
+    query: String,
+    onQueryChange: (String) -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -68,18 +92,67 @@ fun VehicleMapScreen(
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
 
-        uiState.error?.let { error ->
-            ErrorBanner(
-                error = error,
-                onRetry = onRetry,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .windowInsetsPadding(WindowInsets.safeDrawing)
-                    .padding(16.dp),
-            )
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                // Below the status bar / notch, then the requested spacing.
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
+                .padding(start = 32.dp, end = 32.dp, top = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            LineSearchBar(query = query, onQueryChange = onQueryChange)
+
+            uiState.error?.let { error ->
+                ErrorBanner(error = error, onRetry = onRetry)
+            }
         }
     }
 }
+
+@Composable
+private fun LineSearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // 50 percent of the height on each corner: the radius is always half of the field's height.
+    val shape = RoundedCornerShape(percent = 50)
+    val focusManager = LocalFocusManager.current
+
+    // Light grey, slightly transparent so the map shows through; text and icons stay fully opaque.
+    val containerColor = SearchBarBackground.copy(alpha = 0.7f)
+
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        modifier = modifier.fillMaxWidth(),
+        placeholder = { Text(stringResource(Res.string.search_line_hint)) },
+        leadingIcon = { Icon(painterResource(Res.drawable.ic_search), contentDescription = null) },
+        trailingIcon = if (query.isNotEmpty()) {
+            {
+                IconButton(onClick = { onQueryChange("") }) {
+                    Icon(painterResource(Res.drawable.ic_close), contentDescription = stringResource(Res.string.search_clear))
+                }
+            }
+        } else {
+            null
+        },
+        singleLine = true,
+        shape = shape,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = containerColor,
+            unfocusedContainerColor = containerColor,
+            unfocusedBorderColor = containerColor,
+        ),
+        // The map already filters while typing; "Search" on the keyboard just closes it.
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
+    )
+}
+
+/** Neutral light grey (Material's surfaceVariant has a purple tint in the default theme). */
+private val SearchBarBackground = Color(0xFFAAAAAA)
 
 @Composable
 private fun ErrorBanner(
