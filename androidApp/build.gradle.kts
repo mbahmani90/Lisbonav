@@ -22,7 +22,7 @@ val mapsApiKey: String = localProperties.getProperty("MAPS_API_KEY")
     ?: ""
 
 dependencies {
-    implementation(project(":shared"))
+    implementation(project(":app"))
     implementation(project(":calypso-nfc"))
 
     implementation(libs.androidx.activity.compose)

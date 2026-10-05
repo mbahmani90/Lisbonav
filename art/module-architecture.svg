@@ -42,7 +42,7 @@
   <rect x="80" y="186" width="880" height="84" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.8"/>
   <text x="520" y="214" class="name">app</text>
   <text x="520" y="234" class="desc">App.kt · NavHost + bottom bar (Map | Card) · Koin startup (all modules) · builds the iOS "Shared" framework</text>
-  <text x="520" y="254" class="desc" fill="#2563EB">today's :shared, renamed</text>
+  <text x="520" y="254" class="desc" fill="#2563EB">formerly :shared</text>
 
   <path d="M260 142 L260 184" class="dep"/>
   <path d="M720 142 L720 184" class="dep"/>

@@ -32,9 +32,9 @@
   <text x="40" y="34" class="title">Lisbonav — Navegante card reader (NFC)</text>
   <text x="40" y="56" class="sub">Tap the card on the phone → read the Calypso chip → show passes, trips and (if stored) holder data · Android first, iOS later</text>
 
-  <!-- ============ APP (:shared) ============ -->
+  <!-- ============ FEATURE (:feature:card) ============ -->
   <rect x="40" y="80" width="480" height="560" rx="12" class="panel"/>
-  <text x="56" y="106" class="panelTitle">App module  :shared  — Clean Architecture</text>
+  <text x="56" y="106" class="panelTitle">Feature module  :feature:card  — Clean Architecture</text>
 
   <!-- presentation -->
   <rect x="56" y="120" width="448" height="120" rx="10" fill="#E0EDFF" stroke="#3B82F6"/>

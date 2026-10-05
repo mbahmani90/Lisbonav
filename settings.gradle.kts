@@ -28,7 +28,7 @@ dependencyResolutionManagement {
 }
 
 include(":androidApp")
-include(":shared")
+include(":app")
 include(":core")
 include(":systemdesign")
 include(":feature:map")
