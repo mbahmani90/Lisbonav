@@ -4,7 +4,7 @@ A Kotlin Multiplatform app for getting around Lisbon, for **Android and iOS** fr
 
 - **Live bus map:** real-time positions of Carris Metropolitana buses on a map, with a search bar
   to show only one line.
-- **Navegante card reader** *(planned)*: read Lisbon's contactless transit card over NFC
+- **Navegante card reader** *(Android)*: read Lisbon's contactless transit card over NFC
   (Calypso) and show its passes and recent trips.
 
 > Work in progress. See the [roadmap](#roadmap) for what's done.
@@ -57,7 +57,14 @@ feature/map/src/              # feature: live buses on a map
 │   └── di/                   # mapModule: all the feature's Koin bindings
 ├── androidMain/…/            # Google Maps VehicleMap, bus marker icons
 └── iosMain/…/                # MapKit VehicleMap, bus marker images
-feature/transport-card/        # feature: Navegante card screen (placeholder; NFC reading via calypso-nfc next)
+feature/transport-card/        # feature: Navegante card reader
+├── commonMain/…/
+│   ├── data/                 # CalypsoTransportCardReader: calypso-nfc dump → domain model
+│   ├── domain/               # TransportCard, passes, trips, ReadTransportCardUseCase (pass order)
+│   ├── presentation/         # TransportCardViewModel + screen (waiting / reading / card / errors)
+│   └── di/                   # transportCardModule
+├── androidMain/…/            # NFC tap source (reader mode), "Open NFC settings"
+└── iosMain/…/                # not supported yet (Core NFC later)
 core/                         # shared non-UI code: createHttpClient(engine), OkHttp / Darwin engines
 systemdesign/                 # shared design system: LisbonavTheme (components move here when 2+ features use them)
 calypso-nfc/                  # SDK: read Calypso transit cards over NFC (no UI, no app types)
@@ -127,6 +134,7 @@ Shared tests run on both platforms, without network access:
 ```bash
 ./gradlew :feature:map:testAndroidHostTest :feature:map:iosSimulatorArm64Test   # map feature
 ./gradlew :app:testAndroidHostTest :app:iosSimulatorArm64Test                   # app wiring (Koin graph)
+./gradlew :feature:transport-card:testAndroidHostTest :feature:transport-card:iosSimulatorArm64Test   # card feature
 ./gradlew :core:testAndroidHostTest :core:iosSimulatorArm64Test                 # shared core
 ./gradlew :calypso-nfc:testAndroidHostTest :calypso-nfc:iosSimulatorArm64Test   # card SDK
 ```
@@ -142,5 +150,5 @@ Shared tests run on both platforms, without network access:
 - [ ] Navegante card reader (NFC, Android first)
   - [x] `:calypso-nfc` SDK: transport, APDUs, raw read of a Calypso card
   - [x] Calypso parser (passes, trips, holder data where readable)
-  - [ ] Card screen in the app
+  - [x] Card screen in the app
   - [ ] iOS Core NFC

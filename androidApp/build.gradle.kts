@@ -23,12 +23,9 @@ val mapsApiKey: String = localProperties.getProperty("MAPS_API_KEY")
 
 dependencies {
     implementation(project(":app"))
-    implementation(project(":calypso-nfc"))
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.koin.android)
-    // Only the debug card dump (src/debug) launches coroutines in the app module.
-    debugImplementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.compose.uiToolingPreview)
     debugImplementation(libs.compose.uiTooling)
