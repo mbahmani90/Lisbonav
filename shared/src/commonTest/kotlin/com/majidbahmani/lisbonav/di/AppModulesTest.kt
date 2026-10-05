@@ -4,12 +4,14 @@ import com.majidbahmani.lisbonav.data.remote.CarrisMetropolitanaApi
 import com.majidbahmani.lisbonav.data.remote.KtorCarrisMetropolitanaApi
 import com.majidbahmani.lisbonav.data.repository.VehicleRepositoryImpl
 import com.majidbahmani.lisbonav.domain.repository.VehicleRepository
+import com.majidbahmani.lisbonav.domain.usecase.GetVehiclesUseCase
 import io.ktor.client.HttpClient
 import org.koin.core.KoinApplication
 import org.koin.dsl.koinApplication
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertIs
+import kotlin.test.assertNotSame
 import kotlin.test.assertSame
 
 /** Resolves the real module graph on each platform (OkHttp on Android, Darwin on iOS); no network calls. */
@@ -31,6 +33,11 @@ class AppModulesTest {
     @Test
     fun vehicleRepository_resolvesToImplementation() {
         assertIs<VehicleRepositoryImpl>(app.koin.get<VehicleRepository>())
+    }
+
+    @Test
+    fun getVehiclesUseCase_isNewInstancePerInjection() {
+        assertNotSame(app.koin.get<GetVehiclesUseCase>(), app.koin.get<GetVehiclesUseCase>())
     }
 
     @Test
