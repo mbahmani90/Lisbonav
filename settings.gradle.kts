@@ -30,4 +30,5 @@ dependencyResolutionManagement {
 include(":androidApp")
 include(":shared")
 include(":core")
+include(":systemdesign")
 include(":calypso-nfc")

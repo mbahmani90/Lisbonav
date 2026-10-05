@@ -57,6 +57,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
+            implementation(project(":systemdesign"))
+
             // Networking: HttpClient setup and engines come from :core
             implementation(project(":core"))
             implementation(libs.ktor.client.core) // used directly by the Carris API
