@@ -7,6 +7,7 @@ import com.majidbahmani.calypso.nfc.CalypsoReader
 import com.majidbahmani.calypso.nfc.IsoDepTransport
 import com.majidbahmani.calypso.nfc.NfcTagReader
 import com.majidbahmani.calypso.nfc.NfcUnavailableException
+import com.majidbahmani.calypso.nfc.lisboa.LisboaCardParser
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -51,6 +52,15 @@ object DebugTools {
             IsoDepTransport(isoDep).use { transport ->
                 val dump = CalypsoReader(transport).readRaw()
                 dump.toDebugString().lines().filter { it.isNotBlank() }.forEach { Log.d(TAG, it) }
+                // Decoded summary: presence of personal fields only, never their values.
+                val card = LisboaCardParser.parse(dump)
+                if (card == null) {
+                    Log.d(TAG, "Parsed: not a Lisbon card")
+                } else {
+                    Log.d(TAG, "Parsed: serial=${card.engravedSerialNumber != null} name=${card.holderName != null} birthDate=${card.holderBirthDate != null}")
+                    card.contracts.forEach { Log.d(TAG, "Parsed contract: slot ${it.slot} ${it.knownTariff ?: it.tariff} until ${it.validUntil} balance ${it.balanceCents}") }
+                    card.trips.forEach { Log.d(TAG, "Parsed trip: ${it.time} ${it.operator ?: it.provider} ${it.transition} slots ${it.contractSlotsUsed}") }
+                }
             }
         } catch (e: CancellationException) {
             throw e

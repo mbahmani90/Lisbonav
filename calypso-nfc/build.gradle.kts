@@ -25,6 +25,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
+            api(libs.kotlinx.datetime) // LocalDate / LocalDateTime are part of the public model
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

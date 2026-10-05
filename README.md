@@ -141,6 +141,6 @@ Shared tests run on both platforms, without network access:
 - [ ] CI (GitHub Actions)
 - [ ] Navegante card reader (NFC, Android first)
   - [x] `:calypso-nfc` SDK: transport, APDUs, raw read of a Calypso card
-  - [ ] Calypso parser (passes, trips, holder data where readable)
+  - [x] Calypso parser (passes, trips, holder data where readable)
   - [ ] Card screen in the app
   - [ ] iOS Core NFC
