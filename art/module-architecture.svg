@@ -26,7 +26,7 @@
   <rect width="1400" height="920" fill="#F8FAFC"/>
 
   <text x="40" y="34" class="title">Lisbonav — module architecture (planned)</text>
-  <text x="40" y="56" class="sub">Platform shells → app (navigation + wiring) → independent feature modules → :ui-kit (shared UI) + :core (shared non-UI) · arrows = "depends on"</text>
+  <text x="40" y="56" class="sub">Platform shells → app (navigation + wiring) → independent feature modules → :systemdesign (shared UI) + :core (shared non-UI) · arrows = "depends on"</text>
 
   <!-- ===================== GRAPH ===================== -->
 
@@ -105,9 +105,9 @@
   <text x="445" y="415" font-size="13" font-weight="700" fill="#DC2626" text-anchor="middle">✕</text>
   <text x="445" y="316" font-size="11" font-weight="700" fill="#DC2626" text-anchor="middle">✕ features never depend on each other</text>
 
-  <!-- Row 4: ui-kit + core -->
+  <!-- Row 4: systemdesign + core -->
   <rect x="80" y="550" width="320" height="84" rx="12" fill="#CCFBF1" stroke="#0D9488" stroke-width="1.8"/>
-  <text x="240" y="574" class="name">:ui-kit</text>
+  <text x="240" y="574" class="name">:systemdesign</text>
   <text x="240" y="592" class="desc">common pieces only: theme · colours · icons</text>
   <text x="240" y="607" class="desc">search field · error banner · loading indicator</text>
   <text x="240" y="624" class="desc" fill="#0F766E">no screens, no ViewModels — those stay in features</text>
@@ -118,7 +118,7 @@
   <text x="590" y="607" class="desc">Koin network module · common helpers</text>
   <text x="590" y="624" class="desc" fill="#C2410C">shared non-UI only — no Compose, no routes, no DB yet</text>
 
-  <!-- features → ui-kit / core -->
+  <!-- features → systemdesign / core -->
   <path d="M220 478 L220 548" class="dep"/>
   <path d="M330 478 L520 548" class="dep"/>
   <path d="M640 478 L640 548" class="dep"/>
@@ -126,9 +126,9 @@
   <!-- app → core (between feature:card and calypso-nfc) -->
   <path d="M775 272 L775 520 L730 548" class="dep"/>
   <text x="783" y="510" class="small">app uses core</text>
-  <!-- app → ui-kit (left side) -->
+  <!-- app → systemdesign (left side) -->
   <path d="M80 240 H60 V592 H78" class="dep"/>
-  <text x="50" y="420" class="small" transform="rotate(-90 50 420)" text-anchor="middle">app uses ui-kit (theme)</text>
+  <text x="50" y="420" class="small" transform="rotate(-90 50 420)" text-anchor="middle">app uses systemdesign (theme)</text>
 
   <!-- ===================== RULES ===================== -->
   <rect x="40" y="664" width="960" height="226" rx="12" class="panel"/>
@@ -136,7 +136,7 @@
   <text x="56" y="716" class="note">• <tspan font-weight="700">app</tspan> is the only module that knows all features: it builds the NavHost, the bottom bar and the Koin graph.</text>
   <text x="56" y="740" class="note">• <tspan font-weight="700">Each feature owns its route</tspan> and exposes one entry point; moving between screens goes through app.</text>
   <text x="56" y="764" class="note">• <tspan font-weight="700">Each feature has its own UI layer</tspan>: data / domain / presentation (screens, ViewModels) stay in the feature.</text>
-  <text x="56" y="788" class="note">• <tspan font-weight="700">:ui-kit</tspan> = only components used by 2+ features; <tspan font-weight="700">:core</tspan> = shared non-UI code; independent of each other.</text>
+  <text x="56" y="788" class="note">• <tspan font-weight="700">:systemdesign</tspan> = only components used by 2+ features; <tspan font-weight="700">:core</tspan> = shared non-UI code; independent of each other.</text>
 
   <line x1="56" y1="828" x2="96" y2="828" class="dep"/>
   <text x="104" y="832" class="small">depends on</text>
@@ -147,11 +147,11 @@
   <rect x="480" y="818" width="30" height="20" rx="4" fill="#DCFCE7" stroke="#16A34A"/>
   <text x="518" y="832" class="small">feature</text>
   <rect x="580" y="818" width="30" height="20" rx="4" fill="#CCFBF1" stroke="#0D9488"/>
-  <text x="618" y="832" class="small">ui-kit</text>
-  <rect x="680" y="818" width="30" height="20" rx="4" fill="#FFEDD5" stroke="#EA580C"/>
-  <text x="718" y="832" class="small">core</text>
-  <rect x="770" y="818" width="30" height="20" rx="4" fill="#EDE9FE" stroke="#7C3AED"/>
-  <text x="808" y="832" class="small">SDK</text>
+  <text x="618" y="832" class="small">systemdesign</text>
+  <rect x="720" y="818" width="30" height="20" rx="4" fill="#FFEDD5" stroke="#EA580C"/>
+  <text x="758" y="832" class="small">core</text>
+  <rect x="810" y="818" width="30" height="20" rx="4" fill="#EDE9FE" stroke="#7C3AED"/>
+  <text x="848" y="832" class="small">SDK</text>
   <text x="56" y="868" class="small">Later, with 4+ similar KMP modules: a build-logic convention plugin for the shared Gradle setup. Storage (SQLDelight) only when a feature needs it.</text>
 
   <!-- ===================== NAVIGATION ===================== -->
@@ -191,7 +191,7 @@
   <text x="1070" y="582" class="small">HTTP client factory, engines (no Compose)</text>
 
   <rect x="1056" y="608" width="288" height="60" rx="10" fill="#CCFBF1" stroke="#0D9488"/>
-  <text x="1070" y="630" font-size="13" font-weight="700" fill="#0F172A">2 · :ui-kit</text>
+  <text x="1070" y="630" font-size="13" font-weight="700" fill="#0F172A">2 · :systemdesign</text>
   <text x="1070" y="650" class="small">theme, search field, error banner, icons</text>
 
   <rect x="1056" y="676" width="288" height="60" rx="10" fill="#DCFCE7" stroke="#16A34A"/>

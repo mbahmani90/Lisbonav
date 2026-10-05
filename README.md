@@ -72,7 +72,7 @@ iosApp/                       # iOS entry point (iOSApp.swift starts Koin)
 
 The app is moving to feature modules, so new screens stay independent: `app` holds the
 navigation (bottom bar Map | Card) and wiring, and each feature keeps its own data / domain /
-presentation layers, including its screens and ViewModels. `:ui-kit` only holds the theme and
+presentation layers, including its screens and ViewModels. `:systemdesign` only holds the theme and
 small components used by more than one feature (search field, error banner); `:core` shares
 non-UI code (HTTP client, engines).
 
