@@ -17,3 +17,8 @@ rsvg-convert -w 1024 -h 1024 -b "#FFDD00" art/app-icon.svg \
 
 The legacy Android PNGs use the same drawing clipped to a rounded square (`ic_launcher`)
 or a circle (`ic_launcher_round`) at 48/72/96/144/192 px.
+
+# Diagrams
+
+- `nfc-calypso-architecture.svg`: the Navegante card reader (app layers, `:calypso-nfc` SDK,
+  APDUs over NFC, build steps). Shown in the main README.

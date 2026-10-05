@@ -1,0 +1,260 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1010" width="1400" height="1010" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title>Lisbonav — Navegante card reader (NFC) architecture</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#DC2626"/>
+    </marker>
+    <style>
+      .title { font-size: 22px; font-weight: 700; fill: #0F172A; }
+      .sub { font-size: 12.5px; fill: #64748B; }
+      .panelTitle { font-size: 15px; font-weight: 700; fill: #0F172A; }
+      .band { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; fill: #475569; }
+      .box { font-size: 13px; font-weight: 700; fill: #0F172A; text-anchor: middle; }
+      .boxsub { font-size: 10px; fill: #475569; text-anchor: middle; }
+      .small { font-size: 11px; fill: #475569; }
+      .note { font-size: 12px; fill: #1E293B; }
+      .mono { font-family: Menlo, Consolas, monospace; font-size: 10.5px; fill: #0F172A; }
+      .dep { stroke: #475569; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .nfc { stroke: #2563EB; stroke-width: 1.8; fill: none; marker-end: url(#arrowBlue); marker-start: url(#arrowBlue); }
+      .panel { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.2; }
+      .white { fill: #FFFFFF; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <rect width="1400" height="1010" fill="#F8FAFC"/>
+
+  <text x="40" y="34" class="title">Lisbonav — Navegante card reader (NFC)</text>
+  <text x="40" y="56" class="sub">Tap the card on the phone → read the Calypso chip → show passes, trips and (if stored) holder data · Android first, iOS later</text>
+
+  <!-- ============ APP (:shared) ============ -->
+  <rect x="40" y="80" width="480" height="560" rx="12" class="panel"/>
+  <text x="56" y="106" class="panelTitle">App module  :shared  — Clean Architecture</text>
+
+  <!-- presentation -->
+  <rect x="56" y="120" width="448" height="120" rx="10" fill="#E0EDFF" stroke="#3B82F6"/>
+  <text x="68" y="138" class="band">PRESENTATION</text>
+  <rect x="76" y="150" width="190" height="72" rx="8" class="white" stroke="#2563EB"/>
+  <text x="171" y="174" class="box">CardScreen</text>
+  <text x="171" y="192" class="boxsub">"Hold your card to the phone"</text>
+  <text x="171" y="207" class="boxsub">waiting · reading · result · error</text>
+  <rect x="294" y="150" width="190" height="72" rx="8" class="white" stroke="#2563EB"/>
+  <text x="389" y="174" class="box">CardViewModel</text>
+  <text x="389" y="192" class="boxsub">CardUiState (state down,</text>
+  <text x="389" y="207" class="boxsub">events up) · Koin viewModel</text>
+  <path d="M292 186 L268 186" class="dep"/>
+
+  <!-- domain -->
+  <rect x="56" y="262" width="448" height="140" rx="10" fill="#E3F6E8" stroke="#22C55E"/>
+  <text x="68" y="280" class="band">DOMAIN  —  PURE KOTLIN, NO NFC TYPES</text>
+  <rect x="76" y="292" width="130" height="92" rx="8" class="white" stroke="#16A34A"/>
+  <text x="141" y="316" class="box">NaveganteCard</text>
+  <text x="141" y="334" class="boxsub">serial · expiry</text>
+  <text x="141" y="349" class="boxsub">passes · trips</text>
+  <text x="141" y="364" class="boxsub">holder? (if on chip)</text>
+  <rect x="220" y="292" width="130" height="92" rx="8" class="white" stroke="#16A34A"/>
+  <text x="285" y="316" class="box">ReadCard</text>
+  <text x="285" y="332" class="box">UseCase</text>
+  <text x="285" y="352" class="boxsub">suspend invoke():</text>
+  <text x="285" y="366" class="boxsub">Result&lt;NaveganteCard&gt;</text>
+  <rect x="364" y="292" width="120" height="92" rx="8" class="white" stroke="#16A34A" stroke-dasharray="5 3"/>
+  <text x="424" y="316" class="box">CardReader</text>
+  <text x="424" y="334" class="boxsub">interface</text>
+  <text x="424" y="352" class="boxsub">readCard():</text>
+  <text x="424" y="366" class="boxsub">Result&lt;NaveganteCard&gt;</text>
+  <path d="M389 224 L310 290" class="dep"/>
+  <path d="M352 338 L362 338" class="dep"/>
+
+  <!-- data -->
+  <rect x="56" y="424" width="448" height="200" rx="10" fill="#FFF1DC" stroke="#F59E0B"/>
+  <text x="68" y="442" class="band">DATA  —  IMPLEMENTS DOMAIN, USES THE SDK</text>
+  <rect x="76" y="456" width="408" height="76" rx="8" class="white" stroke="#D97706"/>
+  <text x="280" y="480" class="box">CardReaderImpl</text>
+  <text x="280" y="498" class="boxsub">awaits a tap · CalypsoReader(transport).read() · mapper → NaveganteCard</text>
+  <text x="280" y="514" class="boxsub">try/catch → Result · rethrows CancellationException (leaving the screen stops reading)</text>
+  <rect x="76" y="546" width="196" height="62" rx="8" class="white" stroke="#D97706"/>
+  <text x="174" y="570" class="box">CalypsoCard → domain</text>
+  <text x="174" y="588" class="boxsub">mapper (data/mapper)</text>
+  <rect x="288" y="546" width="196" height="62" rx="8" class="white" stroke="#D97706"/>
+  <text x="386" y="570" class="box">Error reasons</text>
+  <text x="386" y="588" class="boxsub">NFC off · no NFC · card removed</text>
+  <text x="386" y="601" class="boxsub">not a Navegante card</text>
+  <!-- implements -->
+  <path d="M424 454 L424 386" class="dep"/>
+  <text x="432" y="420" class="small">implements</text>
+
+  <!-- ============ SDK (:calypso-nfc) ============ -->
+  <rect x="580" y="80" width="460" height="560" rx="12" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.8"/>
+  <text x="596" y="106" class="panelTitle">SDK module  :calypso-nfc  — no UI, no app logic</text>
+  <text x="596" y="122" class="small">reusable by any app · KMP library · only depends on coroutines</text>
+
+  <rect x="596" y="134" width="428" height="92" rx="10" fill="#EDE9FE" stroke="#8B5CF6"/>
+  <text x="608" y="152" class="band">PUBLIC API</text>
+  <rect x="612" y="160" width="196" height="54" rx="8" class="white" stroke="#7C3AED"/>
+  <text x="710" y="182" class="box">CalypsoReader</text>
+  <text x="710" y="199" class="boxsub">read() · readRaw() (step 1)</text>
+  <rect x="820" y="160" width="190" height="54" rx="8" class="white" stroke="#7C3AED"/>
+  <text x="915" y="182" class="box">CalypsoCard</text>
+  <text x="915" y="199" class="boxsub">SDK model · RawCalypsoDump</text>
+
+  <rect x="596" y="240" width="428" height="86" rx="10" fill="#F5F3FF" stroke="#A78BFA"/>
+  <text x="608" y="258" class="band">CALYPSO  (step 2)</text>
+  <rect x="612" y="266" width="196" height="48" rx="8" class="white" stroke="#7C3AED" stroke-dasharray="5 3"/>
+  <text x="710" y="286" class="box">BitReader</text>
+  <text x="710" y="302" class="boxsub">EN 1545 bit-packed fields</text>
+  <rect x="820" y="266" width="190" height="48" rx="8" class="white" stroke="#7C3AED" stroke-dasharray="5 3"/>
+  <text x="915" y="286" class="box">Intercode parsers</text>
+  <text x="915" y="302" class="boxsub">environment · contracts · events</text>
+
+  <rect x="596" y="340" width="428" height="86" rx="10" fill="#F5F3FF" stroke="#A78BFA"/>
+  <text x="608" y="358" class="band">APDU · ISO 7816-4</text>
+  <rect x="612" y="366" width="196" height="48" rx="8" class="white" stroke="#7C3AED"/>
+  <text x="710" y="386" class="box">Apdu</text>
+  <text x="710" y="402" class="boxsub">SELECT · READ RECORD (CLA 00/94)</text>
+  <rect x="820" y="366" width="190" height="48" rx="8" class="white" stroke="#7C3AED"/>
+  <text x="915" y="386" class="box">ApduResponse</text>
+  <text x="915" y="402" class="boxsub">data + status word (90 00)</text>
+
+  <rect x="596" y="440" width="428" height="186" rx="10" fill="#F5F3FF" stroke="#A78BFA"/>
+  <text x="608" y="458" class="band">TRANSPORT</text>
+  <text x="924" y="488" class="small">expect /</text>
+  <text x="924" y="503" class="small">actual</text>
+  <rect x="716" y="466" width="196" height="50" rx="8" class="white" stroke="#7C3AED" stroke-dasharray="5 3"/>
+  <text x="814" y="486" class="box">CardTransport</text>
+  <text x="814" y="503" class="boxsub">interface · transceive(apdu)</text>
+  <rect x="612" y="546" width="196" height="66" rx="8" class="white" stroke="#16A34A"/>
+  <text x="710" y="566" class="box">androidMain</text>
+  <text x="710" y="583" class="boxsub">IsoDepTransport</text>
+  <text x="710" y="597" class="boxsub">NfcTagReader (reader mode)</text>
+  <rect x="820" y="546" width="190" height="66" rx="8" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="915" y="566" class="box" fill="#64748B">iosMain  (step 4)</text>
+  <text x="915" y="583" class="boxsub">CoreNfcTransport</text>
+  <text x="915" y="597" class="boxsub">NFCTagReaderSession</text>
+  <path d="M710 544 L770 518" class="dep"/>
+  <path d="M915 544 L858 518" class="dep"/>
+  <text x="836" y="534" class="small" text-anchor="middle">implement</text>
+
+  <!-- SDK internal flow -->
+  <path d="M780 216 L780 264" class="dep"/>
+  <path d="M780 316 L780 364" class="dep"/>
+  <path d="M780 416 L780 464" class="dep"/>
+
+  <!-- app → SDK -->
+  <path d="M486 494 H548 V187 H610" class="dep" stroke-width="2"/>
+  <text x="556" y="340" class="small" transform="rotate(-90 556 340)" text-anchor="middle">app uses the SDK</text>
+
+  <!-- forbidden SDK → app -->
+  <path d="M594 620 C560 650 540 650 522 628" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="6 5" fill="none" marker-end="url(#arrowRed)"/>
+  <text x="560" y="672" font-size="11" font-weight="700" fill="#DC2626" text-anchor="middle">✕ SDK never depends on the app</text>
+
+  <!-- ============ CARD ============ -->
+  <rect x="580" y="690" width="460" height="290" rx="12" class="panel"/>
+  <text x="596" y="716" class="panelTitle">The card — Navegante (Calypso, ISO 14443-B)</text>
+
+  <!-- phone + card graphic -->
+  <rect x="610" y="736" width="88" height="150" rx="14" fill="#1E293B"/>
+  <rect x="616" y="748" width="76" height="126" rx="6" fill="#E0EDFF"/>
+  <text x="654" y="816" font-size="10" fill="#1E293B" text-anchor="middle">Lisbonav</text>
+  <path d="M712 790 q12 22 0 44" stroke="#2563EB" stroke-width="2" fill="none"/>
+  <path d="M724 780 q18 32 0 64" stroke="#2563EB" stroke-width="2" fill="none"/>
+  <path d="M736 770 q24 42 0 84" stroke="#2563EB" stroke-width="2" fill="none"/>
+  <rect x="756" y="756" width="130" height="96" rx="10" fill="#FFDD00" stroke="#1C1C1C" stroke-width="1.5"/>
+  <text x="821" y="784" font-size="13" font-weight="700" fill="#1C1C1C" text-anchor="middle">navegante</text>
+  <rect x="768" y="800" width="30" height="24" rx="4" fill="#C9A227" stroke="#1C1C1C"/>
+  <text x="844" y="818" font-size="10" fill="#1C1C1C" text-anchor="middle">Calypso chip</text>
+  <text x="821" y="840" font-size="9" fill="#1C1C1C" text-anchor="middle">personalised</text>
+
+  <!-- APDU exchange -->
+  <text x="900" y="752" class="small" font-weight="700">APDU exchange</text>
+  <text x="900" y="772" class="mono">→ SELECT 1TIC.ICA</text>
+  <text x="900" y="788" class="mono">← FCI · 90 00</text>
+  <text x="900" y="808" class="mono">→ READ RECORD</text>
+  <text x="900" y="824" class="mono">  SFI 07 env/holder</text>
+  <text x="900" y="840" class="mono">  SFI 09 contracts</text>
+  <text x="900" y="856" class="mono">  SFI 08 events …</text>
+  <text x="900" y="872" class="mono">← data · 90 00</text>
+  <text x="900" y="888" class="mono">  or 6A 82 / 6A 83</text>
+
+  <text x="596" y="912" class="note"><tspan font-weight="700">Read-only:</tspan> files readable without the operator's keys.</text>
+  <text x="596" y="932" class="note">Writing / top-up needs the operator's SAM keys — not possible, by design.</text>
+  <text x="596" y="956" class="small">Step 1 dumps every file + status word; the parser is designed from that.</text>
+
+  <!-- transport ↔ card -->
+  <path d="M710 614 L710 734" class="nfc"/>
+  <text x="718" y="680" font-size="11" font-weight="700" fill="#2563EB">NFC · APDUs</text>
+
+  <!-- ============ ROADMAP ============ -->
+  <rect x="1080" y="80" width="280" height="560" rx="12" class="panel"/>
+  <text x="1096" y="106" class="panelTitle">Steps (one PR each)</text>
+
+  <rect x="1096" y="122" width="248" height="116" rx="10" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2"/>
+  <text x="1110" y="144" font-size="13" font-weight="700" fill="#5B21B6">1 · Raw read  ← current</text>
+  <text x="1110" y="164" class="small">:calypso-nfc module · APDU · CardTransport</text>
+  <text x="1110" y="180" class="small">Android IsoDep + reader mode</text>
+  <text x="1110" y="196" class="small">readRaw() discovery dump</text>
+  <text x="1110" y="212" class="small">debug-only Logcat dump (removed in 3)</text>
+  <text x="1110" y="228" class="small">tests with FakeCardTransport</text>
+
+  <rect x="1096" y="250" width="248" height="100" rx="10" fill="#FFFFFF" stroke="#A78BFA" stroke-width="1.5"/>
+  <text x="1110" y="272" font-size="13" font-weight="700" fill="#0F172A">2 · Calypso parser</text>
+  <text x="1110" y="292" class="small">BitReader (EN 1545)</text>
+  <text x="1110" y="308" class="small">env/holder · contracts · events</text>
+  <text x="1110" y="324" class="small">tests on the anonymised dump</text>
+  <text x="1110" y="340" class="small">→ CalypsoCard</text>
+
+  <rect x="1096" y="362" width="248" height="134" rx="10" fill="#FFFFFF" stroke="#A78BFA" stroke-width="1.5"/>
+  <text x="1110" y="384" font-size="13" font-weight="700" fill="#0F172A">3 · App layers + screen</text>
+  <text x="1110" y="404" class="small">domain: NaveganteCard, CardReader,</text>
+  <text x="1110" y="420" class="small">  ReadCardUseCase</text>
+  <text x="1110" y="436" class="small">data: CardReaderImpl + mapper</text>
+  <text x="1110" y="452" class="small">presentation: CardViewModel,</text>
+  <text x="1110" y="468" class="small">  CardScreen · Map / Card tabs</text>
+  <text x="1110" y="484" class="small">Koin · ViewModel tests</text>
+
+  <rect x="1096" y="508" width="248" height="116" rx="10" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="1110" y="530" font-size="13" font-weight="700" fill="#64748B">4 · iOS Core NFC</text>
+  <text x="1110" y="550" class="small">CoreNfcTransport</text>
+  <text x="1110" y="566" class="small">Info.plist select-identifiers</text>
+  <text x="1110" y="582" class="small">NFC entitlement</text>
+  <text x="1110" y="598" class="small">needs iPhone + paid Apple account</text>
+
+  <!-- ============ LEGEND / PRIVACY ============ -->
+  <rect x="40" y="690" width="480" height="290" rx="12" class="panel"/>
+  <text x="56" y="716" class="panelTitle">Rules</text>
+  <text x="56" y="742" class="note">• <tspan font-weight="700">:calypso-nfc</tspan> = SDK internals in packages (transport · apdu · calypso);</text>
+  <text x="68" y="760" class="note">data / domain / presentation layers live only in the app.</text>
+  <text x="56" y="784" class="note">• Domain has no NFC types → tests use a fake CardReader.</text>
+  <text x="56" y="808" class="note">• Blocking IsoDep calls run on an IO dispatcher (doc 14).</text>
+  <text x="56" y="832" class="note">• <tspan font-weight="700">Privacy:</tspan> holder data only on screen — never logged in release,</text>
+  <text x="68" y="850" class="note">never stored or sent; repo fixtures anonymised.</text>
+
+  <line x1="56" y1="886" x2="96" y2="886" class="dep"/>
+  <text x="104" y="890" class="small">depends on / calls</text>
+  <line x1="236" y1="886" x2="276" y2="886" class="nfc"/>
+  <text x="284" y="890" class="small">NFC radio</text>
+  <rect x="56" y="906" width="34" height="20" rx="4" fill="#FFFFFF" stroke="#475569" stroke-dasharray="5 3"/>
+  <text x="98" y="920" class="small">interface / later step</text>
+  <line x1="236" y1="916" x2="276" y2="916" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="6 5" marker-end="url(#arrowRed)"/>
+  <text x="284" y="920" class="small">forbidden dependency</text>
+  <rect x="56" y="938" width="34" height="20" rx="4" fill="#EDE9FE" stroke="#7C3AED"/>
+  <text x="98" y="952" class="small">SDK (:calypso-nfc)</text>
+  <rect x="236" y="938" width="34" height="20" rx="4" fill="#E3F6E8" stroke="#16A34A"/>
+  <text x="278" y="952" class="small">app domain</text>
+
+  <!-- ============ WHAT TO EXPECT ============ -->
+  <rect x="1080" y="690" width="280" height="290" rx="12" class="panel"/>
+  <text x="1096" y="716" class="panelTitle">What the chip may give</text>
+  <text x="1096" y="742" class="note"><tspan fill="#16A34A" font-weight="700">✓</tspan> serial number</text>
+  <text x="1096" y="764" class="note"><tspan fill="#16A34A" font-weight="700">✓</tspan> network / issuer, card expiry</text>
+  <text x="1096" y="786" class="note"><tspan fill="#16A34A" font-weight="700">✓</tspan> passes + validity dates</text>
+  <text x="1096" y="808" class="note"><tspan fill="#16A34A" font-weight="700">✓</tspan> last few trips (events)</text>
+  <text x="1096" y="830" class="note"><tspan fill="#D97706" font-weight="700">?</tspan> holder profile / birth date</text>
+  <text x="1096" y="852" class="note"><tspan fill="#DC2626" font-weight="700">✕</tspan> name — often only printed</text>
+  <text x="1096" y="890" class="small">Known only after the step-1 read</text>
+  <text x="1096" y="906" class="small">of the real (personalised) card.</text>
+</svg>
