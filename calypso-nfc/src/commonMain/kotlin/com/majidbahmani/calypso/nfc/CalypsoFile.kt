@@ -5,6 +5,11 @@ package com.majidbahmani.calypso.nfc
  * by short file identifier. Which ones a card has and lets us read is checked per card.
  */
 enum class CalypsoFile(val sfi: Int, val maxRecords: Int) {
+    /** Chip data, including the serial number engraved on the card. */
+    ICC(sfi = 0x02, maxRecords = 1),
+
+    /** Holder identity (name), on personalised cards. */
+    ID(sfi = 0x03, maxRecords = 1),
     ENVIRONMENT_HOLDER(sfi = 0x07, maxRecords = 1),
     EVENT_LOG(sfi = 0x08, maxRecords = 3),
     CONTRACTS(sfi = 0x09, maxRecords = 8),

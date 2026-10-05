@@ -81,8 +81,9 @@ class CalypsoReaderTest {
 
         assertEquals(listOf(environment), dump.file(CalypsoFile.ENVIRONMENT_HOLDER).records.map { it.toHex() })
         assertEquals(listOf(contract1), dump.file(CalypsoFile.CONTRACTS).records.take(1).map { it.toHex() })
-        // After the switch, no command uses class 00 again.
-        assertTrue(card.sentCommands.drop(3).none { it.startsWith("00B2") })
+        // After the refused command, no command uses class 00 again.
+        val refused = card.sentCommands.indexOf("00B2013C00")
+        assertTrue(card.sentCommands.drop(refused + 1).none { it.startsWith("00B2") })
     }
 
     @Test

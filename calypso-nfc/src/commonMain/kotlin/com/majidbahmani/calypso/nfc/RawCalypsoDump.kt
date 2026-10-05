@@ -14,6 +14,9 @@ class RawCalypsoDump(
     /** False when the card has no Calypso application (another kind of card). */
     val isCalypso: Boolean get() = selectResponse.isSuccess
 
+    /** The records read from [file]; empty when the file was missing or unreadable. */
+    fun records(file: CalypsoFile): List<ByteArray> = files.firstOrNull { it.file == file }?.records.orEmpty()
+
     fun toDebugString(): String = buildString {
         appendLine("SELECT 1TIC.ICA → $selectResponse")
         files.forEach { file ->
