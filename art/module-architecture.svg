@@ -26,7 +26,7 @@
   <rect width="1400" height="920" fill="#F8FAFC"/>
 
   <text x="40" y="34" class="title">Lisbonav — module architecture (planned)</text>
-  <text x="40" y="56" class="sub">Platform shells → app (navigation + wiring) → independent feature modules → core · arrows = "depends on"</text>
+  <text x="40" y="56" class="sub">Platform shells → app (navigation + wiring) → independent feature modules → :ui-kit (shared UI) + :core (shared non-UI) · arrows = "depends on"</text>
 
   <!-- ===================== GRAPH ===================== -->
 
@@ -103,28 +103,40 @@
   <path d="M422 410 L468 410" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="5 4" fill="none" marker-end="url(#arrowRed)" marker-start="url(#arrowRed)"/>
   <circle cx="445" cy="410" r="10" fill="#FFFFFF" stroke="#DC2626" stroke-width="1.6"/>
   <text x="445" y="415" font-size="13" font-weight="700" fill="#DC2626" text-anchor="middle">✕</text>
-  <text x="445" y="496" font-size="11" font-weight="700" fill="#DC2626" text-anchor="middle">features never</text>
-  <text x="445" y="510" font-size="11" font-weight="700" fill="#DC2626" text-anchor="middle">depend on each other</text>
+  <text x="445" y="316" font-size="11" font-weight="700" fill="#DC2626" text-anchor="middle">✕ features never depend on each other</text>
 
-  <!-- Row 4: core -->
-  <rect x="80" y="550" width="670" height="74" rx="12" fill="#FFEDD5" stroke="#EA580C" stroke-width="1.8"/>
-  <text x="415" y="576" class="name">core</text>
-  <text x="415" y="596" class="desc">createHttpClient(engine) · OkHttp / Darwin engines · theme &amp; shared UI components · common helpers</text>
-  <text x="415" y="613" class="desc" fill="#C2410C">technical only — no business logic, no routes, no database until a feature needs one</text>
+  <!-- Row 4: ui-kit + core -->
+  <rect x="80" y="550" width="320" height="84" rx="12" fill="#CCFBF1" stroke="#0D9488" stroke-width="1.8"/>
+  <text x="240" y="574" class="name">:ui-kit</text>
+  <text x="240" y="592" class="desc">common pieces only: theme · colours · icons</text>
+  <text x="240" y="607" class="desc">search field · error banner · loading indicator</text>
+  <text x="240" y="624" class="desc" fill="#0F766E">no screens, no ViewModels — those stay in features</text>
 
-  <path d="M250 478 L250 548" class="dep"/>
-  <path d="M610 478 L610 548" class="dep"/>
+  <rect x="430" y="550" width="320" height="84" rx="12" fill="#FFEDD5" stroke="#EA580C" stroke-width="1.8"/>
+  <text x="590" y="574" class="name">:core</text>
+  <text x="590" y="592" class="desc">createHttpClient(engine) · OkHttp / Darwin engines</text>
+  <text x="590" y="607" class="desc">Koin network module · common helpers</text>
+  <text x="590" y="624" class="desc" fill="#C2410C">shared non-UI only — no Compose, no routes, no DB yet</text>
+
+  <!-- features → ui-kit / core -->
+  <path d="M220 478 L220 548" class="dep"/>
+  <path d="M330 478 L520 548" class="dep"/>
+  <path d="M640 478 L640 548" class="dep"/>
+  <path d="M540 478 L350 548" class="dep"/>
   <!-- app → core (between feature:card and calypso-nfc) -->
-  <path d="M775 272 L775 520 L700 548" class="dep"/>
+  <path d="M775 272 L775 520 L730 548" class="dep"/>
   <text x="783" y="510" class="small">app uses core</text>
+  <!-- app → ui-kit (left side) -->
+  <path d="M80 240 H60 V592 H78" class="dep"/>
+  <text x="50" y="420" class="small" transform="rotate(-90 50 420)" text-anchor="middle">app uses ui-kit (theme)</text>
 
   <!-- ===================== RULES ===================== -->
   <rect x="40" y="664" width="960" height="226" rx="12" class="panel"/>
   <text x="56" y="690" class="panelTitle">Rules</text>
   <text x="56" y="716" class="note">• <tspan font-weight="700">app</tspan> is the only module that knows all features: it builds the NavHost, the bottom bar and the Koin graph.</text>
   <text x="56" y="740" class="note">• <tspan font-weight="700">Each feature owns its route</tspan> and exposes one entry point; moving between screens goes through app.</text>
-  <text x="56" y="764" class="note">• <tspan font-weight="700">Inside a feature</tspan>: data / domain / presentation packages, as today (domain has no Android, Ktor or NFC types).</text>
-  <text x="56" y="788" class="note">• <tspan font-weight="700">core</tspan> stays technical; <tspan font-weight="700">calypso-nfc</tspan> is used only by feature:card and never depends on the app.</text>
+  <text x="56" y="764" class="note">• <tspan font-weight="700">Each feature has its own UI layer</tspan>: data / domain / presentation (screens, ViewModels) stay in the feature.</text>
+  <text x="56" y="788" class="note">• <tspan font-weight="700">:ui-kit</tspan> = only components used by 2+ features; <tspan font-weight="700">:core</tspan> = shared non-UI code; independent of each other.</text>
 
   <line x1="56" y1="828" x2="96" y2="828" class="dep"/>
   <text x="104" y="832" class="small">depends on</text>
@@ -134,10 +146,12 @@
   <text x="368" y="832" class="small">composition root</text>
   <rect x="480" y="818" width="30" height="20" rx="4" fill="#DCFCE7" stroke="#16A34A"/>
   <text x="518" y="832" class="small">feature</text>
-  <rect x="580" y="818" width="30" height="20" rx="4" fill="#FFEDD5" stroke="#EA580C"/>
-  <text x="618" y="832" class="small">core</text>
-  <rect x="670" y="818" width="30" height="20" rx="4" fill="#EDE9FE" stroke="#7C3AED"/>
-  <text x="708" y="832" class="small">SDK</text>
+  <rect x="580" y="818" width="30" height="20" rx="4" fill="#CCFBF1" stroke="#0D9488"/>
+  <text x="618" y="832" class="small">ui-kit</text>
+  <rect x="680" y="818" width="30" height="20" rx="4" fill="#FFEDD5" stroke="#EA580C"/>
+  <text x="718" y="832" class="small">core</text>
+  <rect x="770" y="818" width="30" height="20" rx="4" fill="#EDE9FE" stroke="#7C3AED"/>
+  <text x="808" y="832" class="small">SDK</text>
   <text x="56" y="868" class="small">Later, with 4+ similar KMP modules: a build-logic convention plugin for the shared Gradle setup. Storage (SQLDelight) only when a feature needs it.</text>
 
   <!-- ===================== NAVIGATION ===================== -->
@@ -172,24 +186,24 @@
   <rect x="1040" y="500" width="320" height="390" rx="12" class="panel"/>
   <text x="1056" y="526" class="panelTitle">Migration (one PR each)</text>
 
-  <rect x="1056" y="540" width="288" height="72" rx="10" fill="#FFEDD5" stroke="#EA580C"/>
-  <text x="1070" y="562" font-size="13" font-weight="700" fill="#0F172A">1 · core</text>
-  <text x="1070" y="580" class="small">HTTP client factory, engines, theme</text>
-  <text x="1070" y="596" class="small">move out of :shared</text>
+  <rect x="1056" y="540" width="288" height="60" rx="10" fill="#FFEDD5" stroke="#EA580C"/>
+  <text x="1070" y="562" font-size="13" font-weight="700" fill="#0F172A">1 · :core</text>
+  <text x="1070" y="582" class="small">HTTP client factory, engines (no Compose)</text>
 
-  <rect x="1056" y="622" width="288" height="72" rx="10" fill="#DCFCE7" stroke="#16A34A"/>
-  <text x="1070" y="644" font-size="13" font-weight="700" fill="#0F172A">2 · feature:map</text>
-  <text x="1070" y="662" class="small">API, DTOs, mapper, repository, use case,</text>
-  <text x="1070" y="678" class="small">ViewModel, screen + tests + Koin module</text>
+  <rect x="1056" y="608" width="288" height="60" rx="10" fill="#CCFBF1" stroke="#0D9488"/>
+  <text x="1070" y="630" font-size="13" font-weight="700" fill="#0F172A">2 · :ui-kit</text>
+  <text x="1070" y="650" class="small">theme, search field, error banner, icons</text>
 
-  <rect x="1056" y="704" width="288" height="72" rx="10" fill="#DBEAFE" stroke="#2563EB"/>
-  <text x="1070" y="726" font-size="13" font-weight="700" fill="#0F172A">3 · :shared → app</text>
-  <text x="1070" y="744" class="small">App.kt, Koin startup; Xcode script</text>
-  <text x="1070" y="760" class="small">:app:embedAndSignAppleFramework…</text>
+  <rect x="1056" y="676" width="288" height="60" rx="10" fill="#DCFCE7" stroke="#16A34A"/>
+  <text x="1070" y="698" font-size="13" font-weight="700" fill="#0F172A">3 · feature:map</text>
+  <text x="1070" y="718" class="small">all map code + tests + Koin module</text>
 
-  <rect x="1056" y="786" width="288" height="88" rx="10" fill="#F3E8FF" stroke="#9333EA"/>
-  <text x="1070" y="808" font-size="13" font-weight="700" fill="#0F172A">4 · navigation + feature:card</text>
-  <text x="1070" y="826" class="small">NavHost + bottom bar (Map | Card)</text>
-  <text x="1070" y="842" class="small">card screen as placeholder; NFC work</text>
-  <text x="1070" y="858" class="small">continues there with calypso-nfc</text>
+  <rect x="1056" y="744" width="288" height="60" rx="10" fill="#DBEAFE" stroke="#2563EB"/>
+  <text x="1070" y="766" font-size="13" font-weight="700" fill="#0F172A">4 · :shared → app</text>
+  <text x="1070" y="786" class="small">App.kt, Koin startup, Xcode Gradle script</text>
+
+  <rect x="1056" y="812" width="288" height="66" rx="10" fill="#F3E8FF" stroke="#9333EA"/>
+  <text x="1070" y="834" font-size="13" font-weight="700" fill="#0F172A">5 · navigation + feature:card</text>
+  <text x="1070" y="852" class="small">NavHost + bottom bar (Map | Card); NFC</text>
+  <text x="1070" y="867" class="small">continues there with calypso-nfc</text>
 </svg>
