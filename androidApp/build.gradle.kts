@@ -1,9 +1,11 @@
+import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.googleServices)
 }
 
 kotlin {
@@ -21,11 +23,22 @@ val mapsApiKey: String = localProperties.getProperty("MAPS_API_KEY")
     ?: System.getenv("MAPS_API_KEY")
     ?: ""
 
+// Firebase: google-services.json (gitignored, from the Firebase console) next to this file.
+// Missing → warning instead of a failed build, so a fresh clone still builds; the app then logs
+// nothing (LisbonavApp falls back to NoOpAnalytics).
+googleServices {
+    missingGoogleServicesStrategy = MissingGoogleServicesStrategy.WARN
+}
+
 dependencies {
     implementation(project(":app"))
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.koin.android)
+
+    // The BoM picks matching Firebase versions: no version on the artifacts.
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
 
     implementation(libs.compose.uiToolingPreview)
     debugImplementation(libs.compose.uiTooling)
