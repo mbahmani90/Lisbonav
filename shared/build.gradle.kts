@@ -46,6 +46,7 @@ kotlin {
             implementation(libs.compose.uiTooling)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.maps.compose)
+            implementation(libs.androidx.core.ktx) // PathParser for the bus glyph
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
