@@ -8,14 +8,16 @@ import com.majidbahmani.calypso.nfc.lisboa.LisboaTrip
 import com.majidbahmani.lisbonav.feature.transportcard.domain.model.CardTrip
 import com.majidbahmani.lisbonav.feature.transportcard.domain.model.TransportCard
 import com.majidbahmani.lisbonav.feature.transportcard.domain.model.TransportPass
+import kotlinx.datetime.LocalDate
 
 /** SDK model → domain. The holder name isn't used: the card doesn't give it without operator keys. */
-internal fun LisboaCard.toDomain(): TransportCard = TransportCard(
+internal fun LisboaCard.toDomain(readOn: LocalDate): TransportCard = TransportCard(
     number = engravedSerialNumber?.toString(),
     holderBirthDate = holderBirthDate,
     validUntil = validUntil,
     passes = contracts.map { it.toDomain() },
     trips = trips.map { it.toDomain() },
+    readOn = readOn,
 )
 
 internal fun LisboaContract.toDomain(): TransportPass = TransportPass(

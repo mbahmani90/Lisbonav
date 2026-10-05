@@ -5,6 +5,8 @@ import com.majidbahmani.calypso.nfc.lisboa.LisboaContract
 import com.majidbahmani.calypso.nfc.lisboa.LisboaTrip
 import com.majidbahmani.lisbonav.feature.transportcard.data.nfc.CardTapSource
 import com.majidbahmani.lisbonav.feature.transportcard.data.nfc.TappedCard
+import com.majidbahmani.lisbonav.feature.transportcard.domain.model.CardRead
+import com.majidbahmani.lisbonav.feature.transportcard.domain.repository.TransportCardReader
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flow
@@ -46,3 +48,8 @@ internal fun lisboaCard(
     contracts = contracts,
     trips = trips,
 )
+
+/** Emits the given reads, in order, when collected. */
+internal class FakeTransportCardReader(private val reads: List<CardRead>) : TransportCardReader {
+    override fun readCards(): Flow<CardRead> = reads.asFlow()
+}

@@ -14,16 +14,24 @@ import com.majidbahmani.lisbonav.feature.transportcard.domain.model.CardRead.Rea
 import com.majidbahmani.lisbonav.feature.transportcard.domain.repository.TransportCardReader
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Clock
+
+/** Card dates are Lisbon local dates, so "today" is too. */
+private val LISBON = TimeZone.of("Europe/Lisbon")
 
 /**
  * Reads tapped cards with the calypso-nfc SDK: raw read → Lisbon parser → domain model.
- * [readDump] and [parse] are the SDK by default; tests replace them.
+ * [readDump] and [parse] are the SDK by default; tests replace them, and [today] (Lisbon date).
  */
 internal class CalypsoTransportCardReader(
     private val cardTaps: CardTapSource,
     private val readDump: suspend (CardTransport) -> RawCalypsoDump = { CalypsoReader(it).readRaw() },
     private val parse: (RawCalypsoDump) -> LisboaCard? = LisboaCardParser::parse,
+    private val today: () -> LocalDate = { Clock.System.todayIn(LISBON) },
 ) : TransportCardReader {
 
     override fun readCards(): Flow<CardRead> = flow {
@@ -55,7 +63,7 @@ internal class CalypsoTransportCardReader(
             return CardRead.Failure(Reason.CARD_REMOVED)
         }
         return try {
-            parse(dump)?.let { CardRead.Success(it.toDomain()) } ?: CardRead.Failure(Reason.NOT_A_NAVEGANTE_CARD)
+            parse(dump)?.let { CardRead.Success(it.toDomain(readOn = today())) } ?: CardRead.Failure(Reason.NOT_A_NAVEGANTE_CARD)
         } catch (e: IllegalArgumentException) {
             // Records shorter or different than the Lisbon layout: some other Calypso card.
             CardRead.Failure(Reason.NOT_A_NAVEGANTE_CARD)

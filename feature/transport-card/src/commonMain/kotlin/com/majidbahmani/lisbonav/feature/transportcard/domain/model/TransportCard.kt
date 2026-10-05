@@ -17,6 +17,8 @@ data class TransportCard(
     val passes: List<TransportPass>,
     /** The last validations stored on the card, newest first. */
     val trips: List<CardTrip>,
+    /** The day the card was read (Lisbon): the reference for "valid" or "expired". */
+    val readOn: LocalDate,
 )
 
 data class TransportPass(
