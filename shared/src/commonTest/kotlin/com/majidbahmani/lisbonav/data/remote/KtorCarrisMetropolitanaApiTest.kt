@@ -1,5 +1,6 @@
 package com.majidbahmani.lisbonav.data.remote
 
+import com.majidbahmani.lisbonav.core.network.createHttpClient
 import com.majidbahmani.lisbonav.data.remote.dto.VehicleDto
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
