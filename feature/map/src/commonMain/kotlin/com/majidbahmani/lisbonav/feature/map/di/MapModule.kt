@@ -11,12 +11,12 @@ import org.koin.dsl.module
 
 /**
  * Everything the map feature needs. The data classes are internal: only this module creates them.
- * Needs the HttpClient from :core (httpEngineModule + networkModule).
+ * Needs the HttpClient from :core (httpEngineModule + networkModule) and the app's Analytics.
  */
 val mapModule = module {
     single<CarrisMetropolitanaApi> { KtorCarrisMetropolitanaApi(client = get()) }
     single<VehicleRepository> { VehicleRepositoryImpl(api = get()) }
     // Stateless and cheap: a new instance per injection; the repository it uses is a single.
     factory { GetVehiclesUseCase(repository = get()) }
-    viewModel { VehicleMapViewModel(getVehicles = get()) }
+    viewModel { VehicleMapViewModel(getVehicles = get(), analytics = get()) }
 }

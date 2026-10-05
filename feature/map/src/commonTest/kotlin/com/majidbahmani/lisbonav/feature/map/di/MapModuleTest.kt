@@ -1,5 +1,6 @@
 package com.majidbahmani.lisbonav.feature.map.di
 
+import com.majidbahmani.lisbonav.analytics.Analytics
 import com.majidbahmani.lisbonav.core.di.httpEngineModule
 import com.majidbahmani.lisbonav.core.di.networkModule
 import com.majidbahmani.lisbonav.feature.map.data.remote.CarrisMetropolitanaApi
@@ -13,7 +14,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import com.majidbahmani.lisbonav.feature.map.fake.FakeAnalytics
 import org.koin.dsl.koinApplication
+import org.koin.dsl.module
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -24,7 +27,10 @@ import kotlin.test.assertNotSame
 @OptIn(ExperimentalCoroutinesApi::class)
 class MapModuleTest {
 
-    private val app = koinApplication { modules(httpEngineModule, networkModule, mapModule) }
+    // Analytics comes from the app (the platform's Firebase); a fake here.
+    private val app = koinApplication {
+        modules(httpEngineModule, networkModule, mapModule, module { single<Analytics> { FakeAnalytics() } })
+    }
 
     // The ViewModel starts coroutines in viewModelScope (Dispatchers.Main).
     @BeforeTest

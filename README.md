@@ -153,6 +153,18 @@ Without it the app builds and runs, and logs nothing. Collection is off until th
    `iosApp/iosApp/` (both gitignored, never committed).
 3. Restrict the generated API keys in Google Cloud Console like the Maps key.
 
+Events (outcomes only, never card data, search text or positions):
+
+| Event | Parameter | Logged when |
+|---|---|---|
+| `screen_view` | `screen_name` = `map` / `card` | another tab is shown |
+| `line_search` | `line_found` = `true` / `false` | the user stops typing a line number (2 s) |
+| `map_load_error` | `reason` = `no_connection` / `service` | loading the buses starts failing (not on every retry) |
+| `card_read` | `result` = `success` / `nfc_off` / `no_nfc` / `card_removed` / `not_navegante` | a card read ends |
+
+To see `line_found`, `reason` and `result` in reports, add them as event-scoped custom dimensions
+in Google Analytics (Admin → Custom definitions).
+
 ## Build & run
 
 Requirements: Android Studio (with the Kotlin Multiplatform plugin), JDK 21 (requested by

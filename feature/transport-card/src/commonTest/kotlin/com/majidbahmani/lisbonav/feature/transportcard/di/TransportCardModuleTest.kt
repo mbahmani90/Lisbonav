@@ -4,6 +4,8 @@ import com.majidbahmani.lisbonav.feature.transportcard.data.nfc.CardTapSource
 import com.majidbahmani.lisbonav.feature.transportcard.data.repository.CalypsoTransportCardReader
 import com.majidbahmani.lisbonav.feature.transportcard.domain.repository.TransportCardReader
 import com.majidbahmani.lisbonav.feature.transportcard.domain.usecase.ReadTransportCardUseCase
+import com.majidbahmani.lisbonav.analytics.Analytics
+import com.majidbahmani.lisbonav.feature.transportcard.fake.FakeAnalytics
 import com.majidbahmani.lisbonav.feature.transportcard.fake.FakeCardTapSource
 import com.majidbahmani.lisbonav.feature.transportcard.presentation.viewmodel.TransportCardViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,12 +22,18 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotSame
 import kotlin.test.assertSame
 
-/** The feature's bindings with a fake tap source (the real one needs Android NFC). */
+/** The feature's bindings with a fake tap source (the real one needs Android NFC) and Analytics. */
 @OptIn(ExperimentalCoroutinesApi::class)
 class TransportCardModuleTest {
 
     private val app = koinApplication {
-        modules(transportCardModule, module { single<CardTapSource> { FakeCardTapSource() } })
+        modules(
+            transportCardModule,
+            module {
+                single<CardTapSource> { FakeCardTapSource() }
+                single<Analytics> { FakeAnalytics() } // from the app (the platform's Firebase)
+            },
+        )
     }
 
     // The ViewModel starts coroutines in viewModelScope (Dispatchers.Main).

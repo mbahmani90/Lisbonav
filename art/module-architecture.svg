@@ -50,11 +50,11 @@
   <!-- Row 2: app -->
   <rect x="80" y="190" width="1030" height="82" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.8"/>
   <text x="595" y="218" class="name">app</text>
-  <text x="595" y="238" class="desc">App.kt · NavHost + floating bottom bar (Map | Card) · consent dialog over the first screen · initKoin(analytics) starts Koin with every module</text>
+  <text x="595" y="238" class="desc">App.kt · NavHost + floating bottom bar (Map | Card) · consent dialog · screen_view per tab · initKoin(analytics) starts Koin with every module</text>
   <text x="595" y="256" class="desc">builds the iOS "Shared" framework (exports :analytics so Swift can implement it)</text>
 
   <!-- Row 3: features -->
-  <rect x="80" y="326" width="260" height="150" rx="12" fill="#DCFCE7" stroke="#16A34A" stroke-width="1.8"/>
+  <rect x="80" y="326" width="260" height="166" rx="12" fill="#DCFCE7" stroke="#16A34A" stroke-width="1.8"/>
   <text x="210" y="350" class="name">feature:map</text>
   <text x="210" y="368" class="desc">live buses on a map · line search</text>
   <rect x="92" y="382" width="76" height="80" rx="8" fill="#FFFFFF" stroke="#16A34A"/>
@@ -72,8 +72,9 @@
   <text x="294" y="416" class="chipsub">VehicleMap</text>
   <text x="294" y="430" class="chipsub">ViewModel</text>
   <text x="294" y="444" class="chipsub">map screen</text>
+  <text x="210" y="481" class="small" fill="#A16207" text-anchor="middle">logs line_search · map_load_error</text>
 
-  <rect x="380" y="326" width="260" height="150" rx="12" fill="#F3E8FF" stroke="#9333EA" stroke-width="1.8"/>
+  <rect x="380" y="326" width="260" height="166" rx="12" fill="#F3E8FF" stroke="#9333EA" stroke-width="1.8"/>
   <text x="510" y="350" class="name">feature:transport-card</text>
   <text x="510" y="368" class="desc">Navegante card: tap → passes, trips</text>
   <rect x="392" y="382" width="76" height="80" rx="8" fill="#FFFFFF" stroke="#9333EA"/>
@@ -91,6 +92,7 @@
   <text x="594" y="416" class="chipsub">TransportCard</text>
   <text x="594" y="430" class="chipsub">ViewModel</text>
   <text x="594" y="444" class="chipsub">card screen</text>
+  <text x="510" y="481" class="small" fill="#A16207" text-anchor="middle">logs card_read (result only)</text>
 
   <rect x="676" y="346" width="140" height="110" rx="12" fill="#EDE9FE" stroke="#7C3AED" stroke-width="1.8"/>
   <text x="746" y="374" class="name">calypso-nfc</text>
@@ -99,7 +101,7 @@
   <text x="746" y="426" class="desc">CalypsoReader</text>
   <text x="746" y="442" class="desc">no UI · no app types</text>
 
-  <rect x="850" y="326" width="260" height="150" rx="12" fill="#FFE4E6" stroke="#E11D48" stroke-width="1.8"/>
+  <rect x="850" y="326" width="260" height="166" rx="12" fill="#FFE4E6" stroke="#E11D48" stroke-width="1.8"/>
   <text x="980" y="350" class="name">feature:consent</text>
   <text x="980" y="368" class="desc">analytics opt-in, asked once · DataStore from :core</text>
   <rect x="862" y="382" width="76" height="80" rx="8" fill="#FFFFFF" stroke="#E11D48"/>
@@ -117,6 +119,7 @@
   <text x="1064" y="416" class="chipsub">Consent</text>
   <text x="1064" y="430" class="chipsub">ViewModel</text>
   <text x="1064" y="444" class="chipsub">dialog</text>
+  <text x="980" y="481" class="small" fill="#A16207" text-anchor="middle">turns collection on / off</text>
 
   <!-- app → features -->
   <path d="M210 274 L210 324" class="dep"/>
@@ -126,9 +129,9 @@
   <path d="M642 401 L674 401" class="dep"/>
 
   <!-- forbidden feature ↔ feature -->
-  <path d="M342 410 L378 410" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="4 3" fill="none" marker-end="url(#arrowRed)" marker-start="url(#arrowRed)"/>
-  <circle cx="360" cy="410" r="9" fill="#FFFFFF" stroke="#DC2626" stroke-width="1.6"/>
-  <text x="360" y="414.5" font-size="12" font-weight="700" fill="#DC2626" text-anchor="middle">✕</text>
+  <path d="M342 418 L378 418" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="4 3" fill="none" marker-end="url(#arrowRed)" marker-start="url(#arrowRed)"/>
+  <circle cx="360" cy="418" r="9" fill="#FFFFFF" stroke="#DC2626" stroke-width="1.6"/>
+  <text x="360" y="422.5" font-size="12" font-weight="700" fill="#DC2626" text-anchor="middle">✕</text>
   <text x="360" y="316" font-size="11" font-weight="700" fill="#DC2626" text-anchor="middle">✕ features never depend on each other</text>
 
   <!-- Row 4: shared modules -->
@@ -147,15 +150,15 @@
   <rect x="770" y="550" width="340" height="84" rx="12" fill="#FEF9C3" stroke="#CA8A04" stroke-width="1.8"/>
   <text x="940" y="574" class="name">:analytics</text>
   <text x="940" y="592" class="desc">Analytics interface · AnalyticsEvent · NoOpAnalytics</text>
-  <text x="940" y="607" class="desc">no dependencies · implemented by the platform apps</text>
+  <text x="940" y="607" class="desc">used by every feature and app · implemented by the platform apps</text>
   <text x="940" y="624" class="desc" fill="#A16207">no Firebase here: shared code never sees the SDK</text>
 
   <!-- features → shared modules -->
-  <path d="M190 478 L190 548" class="dep"/>
-  <path d="M310 478 L420 548" class="dep"/>
-  <path d="M510 478 L510 548" class="dep"/>
-  <path d="M880 478 L610 548" class="dep"/>
-  <path d="M1040 478 L1040 548" class="dep"/>
+  <path d="M190 494 L190 548" class="dep"/>
+  <path d="M310 494 L420 548" class="dep"/>
+  <path d="M510 494 L510 548" class="dep"/>
+  <path d="M880 494 L610 548" class="dep"/>
+  <path d="M1040 494 L1040 548" class="dep"/>
   <!-- app → core, left rail -->
   <path d="M80 240 H60 V592 H78" class="dep"/>
   <text x="74" y="540" class="small" text-anchor="start" transform="rotate(-90 74 540)">Koin</text>
@@ -176,7 +179,7 @@
   <text x="56" y="742" class="note">• <tspan font-weight="700">app</tspan> is the only module that knows all features: it builds the NavHost, the bottom bar, the consent dialog and the Koin graph.</text>
   <text x="56" y="766" class="note">• <tspan font-weight="700">Each feature owns its route and layers</tspan> (data / domain / presentation, screens, ViewModels); features never depend on each other.</text>
   <text x="56" y="790" class="note">• <tspan font-weight="700">:systemdesign</tspan> = theme + components used by 2+ features; <tspan font-weight="700">:core</tspan> = shared non-UI code (HTTP client, settings DataStore).</text>
-  <text x="56" y="814" class="note">• <tspan font-weight="700">:analytics</tspan> is an interface only: Firebase lives in androidApp (Kotlin) and iosApp (Swift), passed in through initKoin.</text>
+  <text x="56" y="814" class="note">• <tspan font-weight="700">:analytics</tspan> is an interface only (Firebase lives in the platform apps); features log their own events from ViewModels.</text>
   <text x="56" y="838" class="note">• <tspan font-weight="700">feature:consent</tspan> asks once on first launch; only "Allow" turns collection on, the answer is kept in the DataStore.</text>
 
   <line x1="56" y1="874" x2="96" y2="874" class="dep"/>
@@ -199,7 +202,7 @@
   <text x="892" y="878" class="small">analytics</text>
   <rect x="964" y="864" width="26" height="18" rx="4" fill="#EDE9FE" stroke="#7C3AED"/>
   <text x="996" y="878" class="small">SDK</text>
-  <text x="56" y="912" class="small">Next: features log their own events through :analytics. Later, with more similar KMP modules: a build-logic convention plugin for the shared Gradle setup.</text>
+  <text x="56" y="912" class="small">Gold text = events a feature logs through :analytics (outcomes only, no personal data). Later: a build-logic convention plugin for the shared Gradle setup.</text>
 
   <!-- ===================== NAVIGATION ===================== -->
   <rect x="1190" y="80" width="320" height="400" rx="12" class="panel"/>
@@ -255,6 +258,6 @@
   <text x="1216" y="841" class="small" fill="#14532D">✓ Firebase on Android and iOS, collection off</text>
   <rect x="1206" y="852" width="288" height="22" rx="6" fill="#DCFCE7" stroke="#16A34A"/>
   <text x="1216" y="867" class="small" fill="#14532D">✓ consent dialog + stored choice</text>
-  <rect x="1206" y="878" width="288" height="22" rx="6" fill="#FFFFFF" stroke="#CBD5E1"/>
-  <text x="1216" y="893" class="small">○ screen views + feature events</text>
+  <rect x="1206" y="878" width="288" height="22" rx="6" fill="#DCFCE7" stroke="#16A34A"/>
+  <text x="1216" y="893" class="small" fill="#14532D">✓ screen views + feature events</text>
 </svg>

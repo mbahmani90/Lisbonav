@@ -31,6 +31,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core"))
+            implementation(project(":analytics")) // line_search, map_load_error
 
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
