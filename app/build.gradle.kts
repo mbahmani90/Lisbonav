@@ -61,6 +61,7 @@ kotlin {
             implementation(project(":core"))
             implementation(project(":feature:map"))
             implementation(project(":feature:transport-card"))
+            implementation(project(":feature:consent"))
             implementation(libs.navigation.compose) // NavHost + bottom bar
 
             // DI: `api` because initKoin() exposes Koin types to the apps

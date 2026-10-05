@@ -85,7 +85,12 @@ feature/transport-card/        # feature: Navegante card reader
 │   └── di/                   # transportCardModule
 ├── androidMain/…/            # NFC tap source (reader mode), "Open NFC settings"
 └── iosMain/…/                # not supported yet (Core NFC later)
-core/                         # shared non-UI code: createHttpClient(engine), OkHttp / Darwin engines
+feature/consent/               # feature: analytics consent dialog on first launch (GDPR opt-in)
+├── data/                     # DataStoreConsentRepository: the answer in the settings DataStore
+├── domain/                   # AnalyticsConsent, apply rule (only "Allow" turns collection on)
+└── presentation/             # ConsentViewModel + AnalyticsConsentDialog (shown by app over the first screen)
+core/                         # shared non-UI code: createHttpClient(engine), OkHttp / Darwin engines,
+                              #   the settings DataStore (one per app, file path per platform)
 analytics/                    # analytics API: Analytics interface, events, no-op (the apps implement it; no dependencies)
 systemdesign/                 # shared design system: LisbonavTheme, light + dark (components move here when 2+ features use them)
 calypso-nfc/                  # SDK: read Calypso transit cards over NFC (no UI, no app types)
@@ -138,7 +143,8 @@ A key inside an APK is not secret; the Android restriction is what protects it f
 
 ## Setup: Firebase Analytics (optional)
 
-Without it the app builds and runs, and logs nothing. Collection is off until the user opts in.
+Without it the app builds and runs, and logs nothing. Collection is off until the user taps
+**Allow** in the consent dialog shown on first launch.
 
 1. In the [Firebase console](https://console.firebase.google.com/), add the Android app
    `com.majidbahmani.lisbonav` and the iOS app `com.majidbahmani.lisbonav.Lisbonav` (plus your

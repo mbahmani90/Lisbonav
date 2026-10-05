@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-// Shared non-UI code for all features: the HTTP client and its platform engines.
+// Shared non-UI code for all features: the HTTP client and its platform engines, the settings DataStore.
 // No Compose, no business logic, no routes (see the module diagram in the README).
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -28,12 +28,15 @@ kotlin {
             // `api`: createHttpClient() returns HttpClient and the Koin modules are public types.
             api(libs.ktor.client.core)
             api(libs.koin.core)
+            // `api`: createDataStore() returns DataStore<Preferences>, which features read and write.
+            api(libs.datastore.preferences.core)
             implementation(libs.ktor.client.contentNegotiation)
             implementation(libs.ktor.serialization.kotlinxJson)
             implementation(libs.kotlinx.serialization.json)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.koin.android) // androidContext() for the DataStore file
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
