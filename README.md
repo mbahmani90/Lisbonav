@@ -140,9 +140,11 @@ A key inside an APK is not secret; the Android restriction is what protects it f
 Without it the app builds and runs, and logs nothing. Collection is off until the user opts in.
 
 1. In the [Firebase console](https://console.firebase.google.com/), add the Android app
-   `com.majidbahmani.lisbonav` to your project.
-2. Download `google-services.json` into `androidApp/` (gitignored, never committed).
-3. Restrict the generated API key in Google Cloud Console like the Maps key.
+   `com.majidbahmani.lisbonav` and the iOS app `com.majidbahmani.lisbonav.Lisbonav` (plus your
+   `TEAM_ID` if you set one in `iosApp/Configuration/Config.xcconfig`) to your project.
+2. Download `google-services.json` into `androidApp/` and `GoogleService-Info.plist` into
+   `iosApp/iosApp/` (both gitignored, never committed).
+3. Restrict the generated API keys in Google Cloud Console like the Maps key.
 
 ## Build & run
 
