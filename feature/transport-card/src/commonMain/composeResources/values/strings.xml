@@ -1,4 +1,44 @@
 <resources>
     <string name="card_title">Hold your Navegante card to the phone</string>
-    <string name="card_coming_soon">Reading your passes and recent trips is coming soon.</string>
+    <string name="card_hint">Hold it against the back of the phone and keep it still until the details appear.</string>
+    <string name="card_reading">Reading… keep the card still</string>
+    <string name="card_read_another">Hold another card to the phone to read it.</string>
+
+    <string name="card_error_nfc_off">NFC is off</string>
+    <string name="card_error_nfc_off_hint">Turn on NFC to read your card.</string>
+    <string name="card_error_no_nfc">This device can't read cards</string>
+    <string name="card_error_no_nfc_hint">Reading a Navegante card needs NFC.</string>
+    <string name="card_error_removed">The card moved too soon</string>
+    <string name="card_error_removed_hint">Hold it still against the phone and try again.</string>
+    <string name="card_error_not_navegante">This isn't a Navegante card</string>
+    <string name="card_error_not_navegante_hint">Only Lisbon Navegante (Lisboa Viva) cards can be read.</string>
+    <string name="card_open_settings">Open NFC settings</string>
+    <string name="card_try_again">Try again</string>
+
+    <string name="card_number">Card %1$s</string>
+    <string name="card_number_unknown">Navegante card</string>
+    <string name="card_valid_until">Card valid until %1$s</string>
+    <string name="card_birth_date">Date of birth: %1$s</string>
+
+    <string name="card_passes">Passes</string>
+    <string name="card_no_passes">No passes loaded</string>
+    <string name="pass_zapping">Zapping</string>
+    <string name="pass_navegante_lisboa">Navegante Lisboa</string>
+    <string name="pass_other">Pass (code %1$s)</string>
+    <string name="pass_active_until">Valid until %1$s</string>
+    <string name="pass_active">Valid</string>
+    <string name="pass_starts">Starts %1$s</string>
+    <string name="pass_balance">Balance %1$s</string>
+    <string name="pass_expired">Expired %1$s</string>
+
+    <string name="card_trips">Recent trips</string>
+    <string name="card_no_trips">No trips recorded</string>
+    <string name="operator_carris">Carris</string>
+    <string name="operator_metro">Metro</string>
+    <string name="operator_cp">CP</string>
+    <string name="operator_other">Other operator</string>
+    <string name="trip_tap_on">Entry</string>
+    <string name="trip_tap_off">Exit</string>
+    <string name="trip_transfer">Transfer</string>
+    <string name="trip_other">Validation</string>
 </resources>
