@@ -30,6 +30,16 @@ googleServices {
     missingGoogleServicesStrategy = MissingGoogleServicesStrategy.WARN
 }
 
+// Version from the release tag (doc 31): `-Plisbonav.versionName=1.2.3 -Plisbonav.versionCode=10203`.
+// Local builds without them are 1.0 / 1.
+val releaseVersionName = findProperty("lisbonav.versionName") as String?
+val releaseVersionCode = (findProperty("lisbonav.versionCode") as String?)?.toInt()
+
+// Release signing (the Play upload key) only from environment variables, never from files in the
+// repo. Without LISBONAV_KEYSTORE_FILE the release build is unsigned, so no one needs the key to
+// build locally.
+val releaseKeystore: String? = System.getenv("LISBONAV_KEYSTORE_FILE")?.takeIf { it.isNotBlank() }
+
 dependencies {
     implementation(project(":app"))
 
@@ -52,8 +62,8 @@ android {
         applicationId = "com.majidbahmani.lisbonav"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = releaseVersionCode ?: 1
+        versionName = releaseVersionName ?: "1.0"
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
     packaging {
@@ -61,8 +71,19 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    signingConfigs {
+        if (releaseKeystore != null) {
+            create("release") {
+                storeFile = file(releaseKeystore)
+                storePassword = System.getenv("LISBONAV_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("LISBONAV_KEY_ALIAS")
+                keyPassword = System.getenv("LISBONAV_KEY_PASSWORD")
+            }
+        }
+    }
     buildTypes {
         release {
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
