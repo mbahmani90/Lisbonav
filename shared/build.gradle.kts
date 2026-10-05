@@ -67,6 +67,7 @@ kotlin {
 
             // DI: `api` because initKoin() exposes Koin types to the apps
             api(libs.koin.core)
+            implementation(libs.koin.core.viewmodel)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
