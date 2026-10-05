@@ -47,6 +47,8 @@ shared/src/
 │   │   ├── remote/           # Ktor API client, DTOs, HttpClient factory
 │   │   ├── mapper/           # DTO → domain (drops vehicles without a usable position)
 │   │   └── repository/       # VehicleRepositoryImpl: errors returned as Result
+│   ├── presentation/
+│   │   └── viewmodel/        # VehicleMapViewModel: polls every 10 s while the map is visible
 │   └── di/                   # Koin modules, initKoin()
 ├── androidMain/…/di/         # OkHttp engine
 └── iosMain/…/di/             # Darwin engine, initKoinIos() for Swift
