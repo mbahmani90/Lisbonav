@@ -1,5 +1,7 @@
 package com.majidbahmani.lisbonav.feature.map.presentation.ui.map
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
@@ -7,6 +9,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalDensity
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.ComposeMapColorScheme
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
@@ -21,6 +24,7 @@ actual fun VehicleMap(
     vehicles: List<Vehicle>,
     markerTitle: (Vehicle) -> String,
     modifier: Modifier,
+    contentPadding: PaddingValues,
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(VehicleMapDefaults.center.toLatLng(), VehicleMapDefaults.ZOOM)
@@ -30,6 +34,10 @@ actual fun VehicleMap(
     GoogleMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
+        // Dark map tiles in dark mode, like the rest of the app (MapKit does this by itself).
+        mapColorScheme = if (isSystemInDarkTheme()) ComposeMapColorScheme.DARK else ComposeMapColorScheme.LIGHT,
+        // The Google logo must stay visible (Maps terms): keep it above the floating bar.
+        contentPadding = contentPadding,
         // North stays up, so the heading pointers on the markers stay correct.
         uiSettings = MapUiSettings(
             mapToolbarEnabled = false,

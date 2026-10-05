@@ -6,6 +6,7 @@ A Kotlin Multiplatform app for getting around Lisbon, for **Android and iOS** fr
   to show only one line.
 - **Navegante card reader** *(Android)*: read Lisbon's contactless transit card over NFC
   (Calypso) and show its passes and recent trips.
+- **Light and dark mode:** follows the system setting, including the map.
 
 > Work in progress. See the [roadmap](#roadmap) for what's done.
 
@@ -39,7 +40,7 @@ presentation ──► domain ◄── data
 ```
 
 ```
-app/                          # app shell: App() with LisbonavTheme, NavHost + bottom bar (Map | Card),
+app/                          # app shell: App() with LisbonavTheme, NavHost + floating bottom bar (Map | Card),
                               #   initKoin() (all modules), iOS "Shared" framework
 feature/map/src/              # feature: live buses on a map
 ├── commonMain/…/feature/map/
@@ -66,7 +67,7 @@ feature/transport-card/        # feature: Navegante card reader
 ├── androidMain/…/            # NFC tap source (reader mode), "Open NFC settings"
 └── iosMain/…/                # not supported yet (Core NFC later)
 core/                         # shared non-UI code: createHttpClient(engine), OkHttp / Darwin engines
-systemdesign/                 # shared design system: LisbonavTheme (components move here when 2+ features use them)
+systemdesign/                 # shared design system: LisbonavTheme, light + dark (components move here when 2+ features use them)
 calypso-nfc/                  # SDK: read Calypso transit cards over NFC (no UI, no app types)
 ├── commonMain/               # CardTransport, APDUs (ISO 7816-4), CalypsoReader
 └── androidMain/              # IsoDep transport, NFC reader mode (iOS Core NFC later)

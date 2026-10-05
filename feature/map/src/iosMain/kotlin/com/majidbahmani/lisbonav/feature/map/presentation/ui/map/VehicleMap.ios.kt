@@ -1,5 +1,6 @@
 package com.majidbahmani.lisbonav.feature.map.presentation.ui.map
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -15,14 +16,17 @@ import platform.MapKit.MKCoordinateRegionMakeWithDistance
 import platform.MapKit.MKMapView
 import platform.MapKit.MKMapViewDelegateProtocol
 import platform.MapKit.MKPointAnnotation
+import platform.UIKit.UIEdgeInsetsMake
 import platform.darwin.NSObject
 
 /** Apple MapKit inside Compose. No API key needed. */
+@OptIn(ExperimentalForeignApi::class)
 @Composable
 actual fun VehicleMap(
     vehicles: List<Vehicle>,
     markerTitle: (Vehicle) -> String,
     modifier: Modifier,
+    contentPadding: PaddingValues,
 ) {
     // An object, not screen state: it owns the native view and its annotations.
     val controller = remember { MapKitVehicleController() }
@@ -31,9 +35,14 @@ actual fun VehicleMap(
         controller.show(vehicles, markerTitle)
     }
 
+    // Compose dp and UIKit points are the same unit.
+    val bottomInset = contentPadding.calculateBottomPadding().value.toDouble()
+
     UIKitView(
         factory = { controller.mapView },
         modifier = modifier,
+        // MapKit places the Apple Maps logo and "Legal" inside its layout margins.
+        update = { mapView -> mapView.setLayoutMargins(UIEdgeInsetsMake(0.0, 0.0, bottomInset, 0.0)) },
     )
 }
 
