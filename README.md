@@ -56,6 +56,7 @@ shared/src/
 ├── androidMain/…/            # Google Maps VehicleMap, bus marker icons
 └── iosMain/…/                # MapKit VehicleMap, initKoinIos() for Swift
 core/                         # shared non-UI code: createHttpClient(engine), OkHttp / Darwin engines
+systemdesign/                 # shared design system: LisbonavTheme (components move here when 2+ features use them)
 calypso-nfc/                  # SDK: read Calypso transit cards over NFC (no UI, no app types)
 ├── commonMain/               # CardTransport, APDUs (ISO 7816-4), CalypsoReader
 └── androidMain/              # IsoDep transport, NFC reader mode (iOS Core NFC later)
