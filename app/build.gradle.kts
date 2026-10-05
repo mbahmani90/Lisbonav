@@ -66,6 +66,7 @@ kotlin {
 
             // DI: `api` because initKoin() exposes Koin types to the apps
             api(libs.koin.core)
+            implementation(libs.koin.compose) // koinInject() for Analytics in App()
             // `api`: initKoin() takes an Analytics, which the platform apps implement.
             api(project(":analytics"))
         }
