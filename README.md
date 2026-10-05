@@ -39,22 +39,23 @@ presentation ──► domain ◄── data
 ```
 
 ```
-shared/src/
-├── commonMain/…/lisbonav/
+shared/                       # app shell: App() with LisbonavTheme, initKoin() (all modules), iOS "Shared" framework
+feature/map/src/              # feature: live buses on a map
+├── commonMain/…/feature/map/
 │   ├── domain/
 │   │   ├── model/            # Vehicle, GeoPoint, VehicleStatus (plain Kotlin)
 │   │   ├── repository/       # VehicleRepository interface
 │   │   └── usecase/          # GetVehiclesUseCase: hides buses 5+ min behind the rest of the feed
-│   ├── data/
-│   │   ├── remote/           # Ktor API client, DTOs, HttpClient factory
+│   ├── data/                 # internal to the feature
+│   │   ├── remote/           # Carris Metropolitana API (Ktor), DTOs
 │   │   ├── mapper/           # DTO → domain (drops vehicles without a usable position)
 │   │   └── repository/       # VehicleRepositoryImpl: errors returned as Result
 │   ├── presentation/
 │   │   ├── viewmodel/        # VehicleMapViewModel: polls every 10 s while the map is visible
-│   │   └── ui/map/           # VehicleMapScreen (shared) + expect VehicleMap
-│   └── di/                   # Koin modules, initKoin()
+│   │   └── ui/map/           # VehicleMapScreen + expect VehicleMap, search bar
+│   └── di/                   # mapModule: all the feature's Koin bindings
 ├── androidMain/…/            # Google Maps VehicleMap, bus marker icons
-└── iosMain/…/                # MapKit VehicleMap, initKoinIos() for Swift
+└── iosMain/…/                # MapKit VehicleMap, bus marker images
 core/                         # shared non-UI code: createHttpClient(engine), OkHttp / Darwin engines
 systemdesign/                 # shared design system: LisbonavTheme (components move here when 2+ features use them)
 calypso-nfc/                  # SDK: read Calypso transit cards over NFC (no UI, no app types)
@@ -122,8 +123,8 @@ Requirements: Android Studio (with the Kotlin Multiplatform plugin), JDK 21 (req
 Shared tests run on both platforms, without network access:
 
 ```bash
-./gradlew :shared:testAndroidHostTest      # Android (JVM)
-./gradlew :shared:iosSimulatorArm64Test    # iOS simulator
+./gradlew :feature:map:testAndroidHostTest :feature:map:iosSimulatorArm64Test   # map feature
+./gradlew :shared:testAndroidHostTest :shared:iosSimulatorArm64Test             # app wiring (Koin graph)
 ./gradlew :core:testAndroidHostTest :core:iosSimulatorArm64Test                 # shared core
 ./gradlew :calypso-nfc:testAndroidHostTest :calypso-nfc:iosSimulatorArm64Test   # card SDK
 ```
