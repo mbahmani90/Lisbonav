@@ -22,5 +22,9 @@ node_modules/
 *.jks
 *.keystore
 
+# Firebase config (API keys, project ids)
+google-services.json
+GoogleService-Info.plist
+
 # Personal notes / playbook
 /doc/
