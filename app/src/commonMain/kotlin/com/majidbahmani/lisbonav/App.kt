@@ -40,6 +40,7 @@ import com.majidbahmani.lisbonav.feature.consent.presentation.ui.AnalyticsConsen
 import com.majidbahmani.lisbonav.feature.map.MapRoute
 import com.majidbahmani.lisbonav.feature.map.mapScreen
 import com.majidbahmani.lisbonav.feature.transportcard.transportCardScreen
+import com.majidbahmani.lisbonav.navigation.LogScreenViews
 import com.majidbahmani.lisbonav.navigation.TopLevelDestination
 import com.majidbahmani.lisbonav.systemdesign.theme.LisbonavTheme
 import org.jetbrains.compose.resources.painterResource
@@ -50,6 +51,7 @@ fun App() {
     LisbonavTheme {
         // An object kept in composition (doc 29 allows it): the back stack is the navigation state.
         val navController = rememberNavController()
+        LogScreenViews(navController)
 
         Scaffold(
             bottomBar = { LisbonavBottomBar(navController) },
