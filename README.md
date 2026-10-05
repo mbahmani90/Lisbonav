@@ -86,6 +86,7 @@ feature/transport-card/        # feature: Navegante card reader
 ├── androidMain/…/            # NFC tap source (reader mode), "Open NFC settings"
 └── iosMain/…/                # not supported yet (Core NFC later)
 core/                         # shared non-UI code: createHttpClient(engine), OkHttp / Darwin engines
+analytics/                    # analytics API: Analytics interface, events, no-op (the apps implement it; no dependencies)
 systemdesign/                 # shared design system: LisbonavTheme, light + dark (components move here when 2+ features use them)
 calypso-nfc/                  # SDK: read Calypso transit cards over NFC (no UI, no app types)
 ├── commonMain/               # CardTransport, APDUs (ISO 7816-4), CalypsoReader

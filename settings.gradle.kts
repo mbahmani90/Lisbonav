@@ -30,6 +30,7 @@ dependencyResolutionManagement {
 include(":androidApp")
 include(":app")
 include(":core")
+include(":analytics")
 include(":systemdesign")
 include(":feature:map")
 include(":feature:transport-card")

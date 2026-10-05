@@ -15,6 +15,8 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "Shared"
             isStatic = true
+            // Swift implements the Analytics interface: export it with its plain name.
+            export(project(":analytics"))
         }
     }
     
@@ -63,6 +65,8 @@ kotlin {
 
             // DI: `api` because initKoin() exposes Koin types to the apps
             api(libs.koin.core)
+            // `api`: initKoin() takes an Analytics, which the platform apps implement.
+            api(project(":analytics"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
