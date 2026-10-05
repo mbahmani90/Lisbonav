@@ -12,5 +12,7 @@ class LisbonavApp : Application() {
             androidLogger()
             androidContext(this@LisbonavApp)
         }
+        // Debug builds: log a raw dump of any tapped transit card. Release builds: does nothing.
+        DebugTools.install(this)
     }
 }

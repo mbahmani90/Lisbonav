@@ -55,6 +55,9 @@ shared/src/
 │   └── di/                   # Koin modules, initKoin()
 ├── androidMain/…/            # OkHttp engine, Google Maps VehicleMap
 └── iosMain/…/                # Darwin engine, MapKit VehicleMap, initKoinIos() for Swift
+calypso-nfc/                  # SDK: read Calypso transit cards over NFC (no UI, no app types)
+├── commonMain/               # CardTransport, APDUs (ISO 7816-4), CalypsoReader
+└── androidMain/              # IsoDep transport, NFC reader mode (iOS Core NFC later)
 androidApp/                   # Android entry point (LisbonavApp starts Koin)
 iosApp/                       # iOS entry point (iOSApp.swift starts Koin)
 ```
@@ -62,6 +65,15 @@ iosApp/                       # iOS entry point (iOSApp.swift starts Koin)
 - The **engine** is the only platform-specific networking piece. JSON, base URL and error
   handling are Ktor plugins in common code, so both platforms behave the same.
 - Every API sits behind an **interface**, so the repository and ViewModels can be tested with fakes.
+- **`:calypso-nfc`** is a separate SDK module: the app depends on it, never the other way round.
+  It is read-only by design (writing to a card needs the operator's keys).
+
+### Card reader (NFC)
+
+How the Navegante card reader is split between the app's layers and the `:calypso-nfc` SDK,
+how the phone talks to the card (APDUs over NFC), and the steps to build it:
+
+![Navegante card reader architecture](art/nfc-calypso-architecture.svg)
 
 ## Setup: Google Maps key (Android only)
 
@@ -100,6 +112,7 @@ Shared tests run on both platforms, without network access:
 ```bash
 ./gradlew :shared:testAndroidHostTest      # Android (JVM)
 ./gradlew :shared:iosSimulatorArm64Test    # iOS simulator
+./gradlew :calypso-nfc:testAndroidHostTest :calypso-nfc:iosSimulatorArm64Test   # card SDK
 ```
 
 ## Roadmap
@@ -111,3 +124,7 @@ Shared tests run on both platforms, without network access:
 - [ ] Request logging (debug only) and timeouts
 - [ ] CI (GitHub Actions)
 - [ ] Navegante card reader (NFC, Android first)
+  - [x] `:calypso-nfc` SDK: transport, APDUs, raw read of a Calypso card
+  - [ ] Calypso parser (passes, trips, holder data where readable)
+  - [ ] Card screen in the app
+  - [ ] iOS Core NFC
