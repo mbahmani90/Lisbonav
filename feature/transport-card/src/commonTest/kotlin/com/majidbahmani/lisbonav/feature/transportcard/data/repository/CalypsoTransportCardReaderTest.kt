@@ -11,19 +11,21 @@ import com.majidbahmani.lisbonav.feature.transportcard.fake.FakeTappedCard
 import com.majidbahmani.lisbonav.feature.transportcard.fake.lisboaCard
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class CalypsoTransportCardReaderTest {
 
+    private val today = LocalDate(2026, 10, 5)
     private val dump = RawCalypsoDump(ApduResponse(ByteArray(0), ApduResponse.SW_SUCCESS), files = emptyList())
 
     private fun reader(
         source: FakeCardTapSource,
         readDump: suspend () -> RawCalypsoDump = { dump },
         parse: (RawCalypsoDump) -> com.majidbahmani.calypso.nfc.lisboa.LisboaCard? = { lisboaCard() },
-    ) = CalypsoTransportCardReader(source, readDump = { readDump() }, parse = parse)
+    ) = CalypsoTransportCardReader(source, readDump = { readDump() }, parse = parse, today = { today })
 
     @Test
     fun tap_emitsStartedThenTheCard_andClosesIt() = runTest {
@@ -31,7 +33,7 @@ class CalypsoTransportCardReaderTest {
 
         val reads = reader(FakeCardTapSource(listOf(card))).readCards().toList()
 
-        assertEquals(listOf(CardRead.Started, CardRead.Success(lisboaCard().toDomain())), reads)
+        assertEquals(listOf(CardRead.Started, CardRead.Success(lisboaCard().toDomain(readOn = today))), reads)
         assertTrue(card.closed)
     }
 

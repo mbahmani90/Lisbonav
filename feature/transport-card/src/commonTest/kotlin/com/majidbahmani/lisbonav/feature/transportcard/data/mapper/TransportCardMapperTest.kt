@@ -28,8 +28,9 @@ class TransportCardMapperTest {
                     CardTrip(LocalDateTime(2026, 10, 2, 21, 7), CardTrip.Operator.METRO, CardTrip.Kind.TAP_OFF, routeNumber = 5),
                     CardTrip(LocalDateTime(2026, 10, 2, 19, 41), CardTrip.Operator.CARRIS, CardTrip.Kind.TAP_ON, routeNumber = 735),
                 ),
+                readOn = LocalDate(2026, 10, 5),
             ),
-            lisboaCard().toDomain(),
+            lisboaCard().toDomain(readOn = LocalDate(2026, 10, 5)),
         )
     }
 
@@ -52,6 +53,6 @@ class TransportCardMapperTest {
 
     @Test
     fun missingNumber_staysNull() {
-        assertEquals(null, lisboaCard().copy(engravedSerialNumber = null).toDomain().number)
+        assertEquals(null, lisboaCard().copy(engravedSerialNumber = null).toDomain(readOn = LocalDate(2026, 10, 5)).number)
     }
 }
