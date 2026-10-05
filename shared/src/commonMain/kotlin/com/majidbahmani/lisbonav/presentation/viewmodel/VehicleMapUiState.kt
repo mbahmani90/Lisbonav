@@ -7,6 +7,7 @@ import com.majidbahmani.lisbonav.domain.model.Vehicle
  * the map while a refresh runs or fails, and an error is shown on top of them.
  */
 data class VehicleMapUiState(
+    /** The buses to draw, already filtered by the search query (VehicleMapViewModel.query). */
     val vehicles: List<Vehicle> = emptyList(),
     /** True only until the first answer (success or error) arrives. */
     val isLoading: Boolean = true,
