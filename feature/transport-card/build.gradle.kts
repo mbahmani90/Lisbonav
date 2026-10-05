@@ -25,6 +25,7 @@ kotlin {
         androidResources {
             enable = true // Compose resources (strings)
         }
+        withHostTest {}
     }
 
     sourceSets {
@@ -34,8 +35,20 @@ kotlin {
             implementation(libs.compose.material3)
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
-            implementation(libs.navigation.compose) // TransportCardRoute + cardScreen() for the app's NavHost
+            implementation(libs.navigation.compose) // TransportCardRoute + transportCardScreen() for the app's NavHost
             implementation(libs.kotlinx.serialization.json) // @Serializable route
+
+            implementation(project(":calypso-nfc")) // card reading + Lisbon parser (data layer only)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime) // dates in the domain model
+            implementation(libs.koin.core)
+        }
+        androidMain.dependencies {
+            implementation(libs.koin.android) // androidApplication() for the NFC tag reader
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }

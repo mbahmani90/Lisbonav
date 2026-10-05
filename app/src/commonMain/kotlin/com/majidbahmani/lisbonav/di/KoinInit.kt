@@ -3,6 +3,8 @@ package com.majidbahmani.lisbonav.di
 import com.majidbahmani.lisbonav.core.di.httpEngineModule
 import com.majidbahmani.lisbonav.core.di.networkModule
 import com.majidbahmani.lisbonav.feature.map.di.mapModule
+import com.majidbahmani.lisbonav.feature.transportcard.di.cardTapSourceModule
+import com.majidbahmani.lisbonav.feature.transportcard.di.transportCardModule
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
@@ -14,6 +16,8 @@ internal val appModules = listOf(
     networkModule,
     // features
     mapModule,
+    transportCardModule,
+    cardTapSourceModule,
 )
 
 /**

@@ -23,7 +23,8 @@ import kotlin.test.assertSame
 class AppModulesTest {
 
     // A local KoinApplication, not startKoin(): tests don't touch the global Koin instance.
-    private val app: KoinApplication = koinApplication { modules(appModules) }
+    // No eager instances: the Android NFC tag reader needs a real Application, which host tests don't have.
+    private val app: KoinApplication = koinApplication(createEagerInstances = false) { modules(appModules) }
 
     // ViewModels start coroutines in viewModelScope (Dispatchers.Main), which tests don't have.
     @BeforeTest
