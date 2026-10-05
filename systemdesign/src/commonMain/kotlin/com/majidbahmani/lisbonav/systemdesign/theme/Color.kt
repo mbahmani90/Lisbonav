@@ -15,7 +15,7 @@ internal object LisbonavColors {
     val SurfaceVariant = Color(0xFFE6E6E6)
     val OnSurfaceVariant = Color(0xFF4A4A4A)
 
-    /** Mid grey behind controls floating on the map (search bar). */
+    /** Mid grey for the `surfaceDim` role (set so it never falls back to Material's tinted grey). */
     val SurfaceDim = Color(0xFFAAAAAA)
 }
 
