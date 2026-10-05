@@ -1,22 +1,22 @@
-package com.majidbahmani.lisbonav.data.remote
+package com.majidbahmani.lisbonav.core.network
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 /**
- * The shared HTTP client for the Carris Metropolitana API.
+ * The app's HTTP client, shared by every API.
  *
- * The [engine] is passed in: OkHttp on Android, Darwin on iOS (wired in the DI step),
- * and a `MockEngine` in tests.
+ * Generic on purpose: no base URL here; each API builds its own URLs. The [engine] is passed in:
+ * OkHttp on Android, Darwin on iOS (see httpEngineModule), and a `MockEngine` in tests.
  */
 fun createHttpClient(engine: HttpClientEngine): HttpClient = HttpClient(engine) {
     // Fail on 4xx/5xx instead of trying to parse an error body as data.
     expectSuccess = true
 
+    // Also sends `Accept: application/json`.
     install(ContentNegotiation) {
         json(
             Json {
@@ -24,10 +24,5 @@ fun createHttpClient(engine: HttpClientEngine): HttpClient = HttpClient(engine) 
                 ignoreUnknownKeys = true
             },
         )
-    }
-
-    // ContentNegotiation already sends `Accept: application/json`.
-    defaultRequest {
-        url(CarrisMetropolitanaApi.BASE_URL)
     }
 }

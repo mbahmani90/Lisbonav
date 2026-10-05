@@ -53,8 +53,9 @@ shared/src/
 │   │   ├── viewmodel/        # VehicleMapViewModel: polls every 10 s while the map is visible
 │   │   └── ui/map/           # VehicleMapScreen (shared) + expect VehicleMap
 │   └── di/                   # Koin modules, initKoin()
-├── androidMain/…/            # OkHttp engine, Google Maps VehicleMap
-└── iosMain/…/                # Darwin engine, MapKit VehicleMap, initKoinIos() for Swift
+├── androidMain/…/            # Google Maps VehicleMap, bus marker icons
+└── iosMain/…/                # MapKit VehicleMap, initKoinIos() for Swift
+core/                         # shared non-UI code: createHttpClient(engine), OkHttp / Darwin engines
 calypso-nfc/                  # SDK: read Calypso transit cards over NFC (no UI, no app types)
 ├── commonMain/               # CardTransport, APDUs (ISO 7816-4), CalypsoReader
 └── androidMain/              # IsoDep transport, NFC reader mode (iOS Core NFC later)
@@ -122,6 +123,7 @@ Shared tests run on both platforms, without network access:
 ```bash
 ./gradlew :shared:testAndroidHostTest      # Android (JVM)
 ./gradlew :shared:iosSimulatorArm64Test    # iOS simulator
+./gradlew :core:testAndroidHostTest :core:iosSimulatorArm64Test                 # shared core
 ./gradlew :calypso-nfc:testAndroidHostTest :calypso-nfc:iosSimulatorArm64Test   # card SDK
 ```
 
