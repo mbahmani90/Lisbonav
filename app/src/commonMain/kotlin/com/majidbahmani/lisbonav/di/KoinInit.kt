@@ -1,7 +1,9 @@
 package com.majidbahmani.lisbonav.di
 
+import com.majidbahmani.lisbonav.core.di.dataStoreModule
 import com.majidbahmani.lisbonav.core.di.httpEngineModule
 import com.majidbahmani.lisbonav.core.di.networkModule
+import com.majidbahmani.lisbonav.feature.consent.di.consentModule
 import com.majidbahmani.lisbonav.feature.map.di.mapModule
 import com.majidbahmani.lisbonav.feature.transportcard.di.cardTapSourceModule
 import com.majidbahmani.lisbonav.feature.transportcard.di.transportCardModule
@@ -18,10 +20,12 @@ internal val appModules = listOf(
     // :core
     httpEngineModule,
     networkModule,
+    dataStoreModule,
     // features
     mapModule,
     transportCardModule,
     cardTapSourceModule,
+    consentModule,
 )
 
 /**

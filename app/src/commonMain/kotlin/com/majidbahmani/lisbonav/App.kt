@@ -36,6 +36,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.majidbahmani.lisbonav.feature.consent.presentation.ui.AnalyticsConsentDialog
 import com.majidbahmani.lisbonav.feature.map.MapRoute
 import com.majidbahmani.lisbonav.feature.map.mapScreen
 import com.majidbahmani.lisbonav.feature.transportcard.transportCardScreen
@@ -63,6 +64,9 @@ fun App() {
                 transportCardScreen(contentPadding)
             }
         }
+
+        // Asks once, over the first screen; nothing once the user has answered.
+        AnalyticsConsentDialog()
     }
 }
 
