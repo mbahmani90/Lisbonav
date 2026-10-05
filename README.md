@@ -39,7 +39,7 @@ presentation ──► domain ◄── data
 ```
 
 ```
-shared/                       # app shell: App() with LisbonavTheme, initKoin() (all modules), iOS "Shared" framework
+app/                          # app shell: App() with LisbonavTheme, initKoin() (all modules), iOS "Shared" framework
 feature/map/src/              # feature: live buses on a map
 ├── commonMain/…/feature/map/
 │   ├── domain/
@@ -115,7 +115,7 @@ Requirements: Android Studio (with the Kotlin Multiplatform plugin), JDK 21 (req
 ./gradlew :androidApp:assembleDebug
 
 # iOS: open iosApp/iosApp.xcodeproj in Xcode and run, or build from the command line
-./gradlew :shared:linkDebugFrameworkIosSimulatorArm64
+./gradlew :app:linkDebugFrameworkIosSimulatorArm64
 ```
 
 ## Tests
@@ -124,7 +124,7 @@ Shared tests run on both platforms, without network access:
 
 ```bash
 ./gradlew :feature:map:testAndroidHostTest :feature:map:iosSimulatorArm64Test   # map feature
-./gradlew :shared:testAndroidHostTest :shared:iosSimulatorArm64Test             # app wiring (Koin graph)
+./gradlew :app:testAndroidHostTest :app:iosSimulatorArm64Test                   # app wiring (Koin graph)
 ./gradlew :core:testAndroidHostTest :core:iosSimulatorArm64Test                 # shared core
 ./gradlew :calypso-nfc:testAndroidHostTest :calypso-nfc:iosSimulatorArm64Test   # card SDK
 ```

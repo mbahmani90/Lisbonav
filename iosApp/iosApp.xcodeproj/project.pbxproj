@@ -152,7 +152,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n# Xcode does not load shell profiles (~/.zshrc), so JAVA_HOME may be unset here.\n# Without a system JDK, fall back to the JDK bundled with Android Studio.\nif [ -z \"$JAVA_HOME\" ] && ! /usr/libexec/java_home >/dev/null 2>&1; then\n  export JAVA_HOME=\"/Applications/Android Studio.app/Contents/jbr/Contents/Home\"\nfi\n./gradlew :shared:embedAndSignAppleFrameworkForXcode\n";
+			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n# Xcode does not load shell profiles (~/.zshrc), so JAVA_HOME may be unset here.\n# Without a system JDK, fall back to the JDK bundled with Android Studio.\nif [ -z \"$JAVA_HOME\" ] && ! /usr/libexec/java_home >/dev/null 2>&1; then\n  export JAVA_HOME=\"/Applications/Android Studio.app/Contents/jbr/Contents/Home\"\nfi\n./gradlew :app:embedAndSignAppleFrameworkForXcode\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

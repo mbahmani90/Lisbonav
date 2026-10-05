@@ -19,7 +19,7 @@ kotlin {
     }
     
     android {
-       namespace = "com.majidbahmani.lisbonav.shared"
+       namespace = "com.majidbahmani.lisbonav.app"
        compileSdk = libs.versions.android.compileSdk.get().toInt()
        minSdk = libs.versions.android.minSdk.get().toInt()
     
