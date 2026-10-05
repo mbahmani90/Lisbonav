@@ -1,9 +1,11 @@
 package com.majidbahmani.lisbonav.feature.map.presentation.viewmodel
 
+import com.majidbahmani.lisbonav.analytics.AnalyticsEvent
 import com.majidbahmani.lisbonav.feature.map.domain.model.GeoPoint
 import com.majidbahmani.lisbonav.feature.map.domain.model.Vehicle
 import com.majidbahmani.lisbonav.feature.map.domain.model.VehicleStatus
 import com.majidbahmani.lisbonav.feature.map.domain.usecase.GetVehiclesUseCase
+import com.majidbahmani.lisbonav.feature.map.fake.FakeAnalytics
 import com.majidbahmani.lisbonav.feature.map.fake.FakeVehicleRepository
 import com.majidbahmani.lisbonav.feature.map.presentation.viewmodel.VehicleMapUiState.ErrorReason
 import androidx.compose.runtime.snapshots.Snapshot
@@ -23,6 +25,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -37,8 +40,10 @@ class VehicleMapViewModelTest {
 
     private val repository = FakeVehicleRepository(Result.success(listOf(vehicle("a"))))
 
+    private val analytics = FakeAnalytics()
+
     // The real use case with a fake repository (doc 22).
-    private fun createViewModel() = VehicleMapViewModel(GetVehiclesUseCase(repository))
+    private fun createViewModel() = VehicleMapViewModel(GetVehiclesUseCase(repository), analytics)
 
     private fun vehicle(id: String, lineId: String = "1997") = Vehicle(
         id = id,
@@ -221,5 +226,73 @@ class VehicleMapViewModelTest {
         type(viewModel, "")
 
         assertEquals(listOf("a", "b"), viewModel.vehicleIds)
+    }
+
+    // --- Analytics ---
+
+    private fun loadError(reason: String) = AnalyticsEvent("map_load_error", mapOf("reason" to reason))
+
+    private fun lineSearch(found: Boolean) = AnalyticsEvent("line_search", mapOf("line_found" to "$found"))
+
+    @Test
+    fun loadError_isLoggedOnceWhenLoadingStartsFailing_notOnEveryPoll() = runTest {
+        repository.result = Result.failure(IOException("offline"))
+        collect(createViewModel())
+        runCurrent()
+        advanceTimeBy(VehicleMapViewModel.DEFAULT_REFRESH_INTERVAL * 3) // three more failed polls
+        runCurrent()
+
+        assertEquals(listOf(loadError("no_connection")), analytics.events)
+    }
+
+    @Test
+    fun loadError_isLoggedAgainAfterRecovering_orWhenTheReasonChanges() = runTest {
+        repository.result = Result.failure(IOException("offline"))
+        collect(createViewModel())
+        runCurrent()
+
+        repository.result = Result.failure(IllegalStateException("HTTP 500"))
+        advanceTimeBy(VehicleMapViewModel.DEFAULT_REFRESH_INTERVAL)
+        runCurrent()
+        repository.result = Result.success(listOf(vehicle("a")))
+        advanceTimeBy(VehicleMapViewModel.DEFAULT_REFRESH_INTERVAL)
+        runCurrent()
+        repository.result = Result.failure(IllegalStateException("HTTP 500"))
+        advanceTimeBy(VehicleMapViewModel.DEFAULT_REFRESH_INTERVAL)
+        runCurrent()
+
+        assertEquals(listOf(loadError("no_connection"), loadError("service"), loadError("service")), analytics.events)
+    }
+
+    @Test
+    fun lineSearch_isLoggedOnceTheUserStopsTyping_withOnlyWhetherTheLineWasFound() = runTest {
+        repository.result = Result.success(listOf(vehicle("a", lineId = "3510")))
+        val viewModel = createViewModel()
+        collect(viewModel)
+        runCurrent()
+
+        type(viewModel, "3")
+        type(viewModel, "35")
+        type(viewModel, "351")
+        assertEquals(emptyList(), analytics.events) // still typing
+        advanceTimeBy(VehicleMapViewModel.SEARCH_SETTLE_TIME + 1.seconds)
+
+        type(viewModel, "9999")
+        advanceTimeBy(VehicleMapViewModel.SEARCH_SETTLE_TIME + 1.seconds)
+
+        // No search text in the events: only found / not found.
+        assertEquals(listOf(lineSearch(found = true), lineSearch(found = false)), analytics.events)
+    }
+
+    @Test
+    fun lineSearch_isNotLoggedForAClearedQuery_orBeforeTheBusesHaveLoaded() = runTest {
+        val viewModel = createViewModel() // not collected: nothing loaded yet
+
+        type(viewModel, "3510")
+        advanceTimeBy(VehicleMapViewModel.SEARCH_SETTLE_TIME + 1.seconds)
+        type(viewModel, "")
+        advanceTimeBy(VehicleMapViewModel.SEARCH_SETTLE_TIME + 1.seconds)
+
+        assertEquals(emptyList(), analytics.events)
     }
 }

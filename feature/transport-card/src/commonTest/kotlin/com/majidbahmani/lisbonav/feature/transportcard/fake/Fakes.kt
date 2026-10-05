@@ -1,5 +1,7 @@
 package com.majidbahmani.lisbonav.feature.transportcard.fake
 
+import com.majidbahmani.lisbonav.analytics.Analytics
+import com.majidbahmani.lisbonav.analytics.AnalyticsEvent
 import com.majidbahmani.calypso.nfc.lisboa.LisboaCard
 import com.majidbahmani.calypso.nfc.lisboa.LisboaContract
 import com.majidbahmani.calypso.nfc.lisboa.LisboaTrip
@@ -52,4 +54,13 @@ internal fun lisboaCard(
 /** Emits the given reads, in order, when collected. */
 internal class FakeTransportCardReader(private val reads: List<CardRead>) : TransportCardReader {
     override fun readCards(): Flow<CardRead> = reads.asFlow()
+}
+
+/** Records logged events, in order. */
+internal class FakeAnalytics : Analytics {
+    val events = mutableListOf<AnalyticsEvent>()
+    override fun log(event: AnalyticsEvent) {
+        events += event
+    }
+    override fun setCollectionEnabled(enabled: Boolean) = Unit
 }

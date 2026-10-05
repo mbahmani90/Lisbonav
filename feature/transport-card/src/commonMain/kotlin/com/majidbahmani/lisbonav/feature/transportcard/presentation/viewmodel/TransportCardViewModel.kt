@@ -2,8 +2,10 @@ package com.majidbahmani.lisbonav.feature.transportcard.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.majidbahmani.lisbonav.analytics.Analytics
 import com.majidbahmani.lisbonav.feature.transportcard.domain.model.CardRead
 import com.majidbahmani.lisbonav.feature.transportcard.domain.usecase.ReadTransportCardUseCase
+import com.majidbahmani.lisbonav.feature.transportcard.presentation.analytics.CardAnalyticsEvents
 import com.majidbahmani.lisbonav.feature.transportcard.presentation.viewmodel.TransportCardUiState.CardShown
 import com.majidbahmani.lisbonav.feature.transportcard.presentation.viewmodel.TransportCardUiState.Error
 import com.majidbahmani.lisbonav.feature.transportcard.presentation.viewmodel.TransportCardUiState.Reading
@@ -28,10 +30,12 @@ import kotlinx.coroutines.flow.stateIn
  * - Coming back keeps a card already shown, but clears an error or an interrupted read: they belong
  *   to the previous visit (e.g. NFC was switched on in the settings meanwhile).
  * - [retry] starts over, e.g. after turning NFC on.
+ * - Analytics: one `card_read` per outcome (success or why it failed), never the card's data.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class TransportCardViewModel(
     private val readCard: ReadTransportCardUseCase,
+    private val analytics: Analytics,
 ) : ViewModel() {
 
     private val retryTrigger = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
@@ -44,7 +48,11 @@ class TransportCardViewModel(
         .flatMapLatest {
             flow {
                 if (lastState !is CardShown) emit(Waiting)
-                emitAll(readCard().map { it.toUiState() })
+                emitAll(
+                    readCard()
+                        .onEach { read -> CardAnalyticsEvents.cardRead(read)?.let(analytics::log) }
+                        .map { it.toUiState() },
+                )
             }
         }
         .onEach { lastState = it }

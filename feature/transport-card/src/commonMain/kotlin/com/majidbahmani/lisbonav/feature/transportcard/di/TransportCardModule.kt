@@ -8,12 +8,15 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-/** Everything the transport card feature needs. Add [cardTapSourceModule] for the platform's NFC. */
+/**
+ * Everything the transport card feature needs. Add [cardTapSourceModule] for the platform's NFC;
+ * Analytics comes from the app.
+ */
 val transportCardModule = module {
     single<TransportCardReader> { CalypsoTransportCardReader(cardTaps = get()) }
     // Stateless and cheap: a new instance per injection; the reader it uses is a single.
     factory { ReadTransportCardUseCase(reader = get()) }
-    viewModel { TransportCardViewModel(readCard = get()) }
+    viewModel { TransportCardViewModel(readCard = get(), analytics = get()) }
 }
 
 /** Where tapped cards come from: NFC reader mode on Android, not supported (yet) on iOS. */

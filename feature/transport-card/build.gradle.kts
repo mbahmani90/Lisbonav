@@ -39,6 +39,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json) // @Serializable route
 
             implementation(project(":calypso-nfc")) // card reading + Lisbon parser (data layer only)
+            implementation(project(":analytics")) // card_read
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime) // dates in the domain model
             implementation(libs.koin.core)

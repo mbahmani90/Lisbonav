@@ -1,11 +1,13 @@
 package com.majidbahmani.lisbonav.feature.transportcard.presentation.viewmodel
 
+import com.majidbahmani.lisbonav.analytics.AnalyticsEvent
 import com.majidbahmani.lisbonav.feature.transportcard.domain.model.CardRead
 import com.majidbahmani.lisbonav.feature.transportcard.domain.model.CardRead.Reason
 import com.majidbahmani.lisbonav.feature.transportcard.domain.model.TransportCard
 import com.majidbahmani.lisbonav.feature.transportcard.domain.model.TransportPass
 import com.majidbahmani.lisbonav.feature.transportcard.domain.repository.TransportCardReader
 import com.majidbahmani.lisbonav.feature.transportcard.domain.usecase.ReadTransportCardUseCase
+import com.majidbahmani.lisbonav.feature.transportcard.fake.FakeAnalytics
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -55,10 +57,11 @@ class TransportCardViewModelTest {
     }
 
     private val reader = ScriptedCardReader()
+    private val analytics = FakeAnalytics()
 
     // The real use case with a fake reader (doc 22). Lazy: created after setMain, so viewModelScope
     // runs on the test dispatcher.
-    private val viewModel by lazy { TransportCardViewModel(ReadTransportCardUseCase(reader)) }
+    private val viewModel by lazy { TransportCardViewModel(ReadTransportCardUseCase(reader), analytics) }
 
     private val today = LocalDate(2026, 10, 5)
     private val expired = TransportPass(TransportPass.Type.OTHER, 1, LocalDate(2026, 9, 1), LocalDate(2026, 9, 30), null)
@@ -156,5 +159,37 @@ class TransportCardViewModelTest {
         runCurrent()
 
         assertEquals(TransportCardUiState.Waiting, viewModel.uiState.value)
+    }
+
+    // --- Analytics ---
+
+    private fun cardRead(result: String) = AnalyticsEvent("card_read", mapOf("result" to result))
+
+    @Test
+    fun eachOutcome_logsOneCardRead_withoutCardData() = runTest {
+        showScreen()
+        runCurrent()
+
+        tap(CardRead.Started) // still reading: nothing yet
+        assertEquals(emptyList(), analytics.events)
+
+        tap(CardRead.Success(card))
+        tap(CardRead.Started, CardRead.Failure(Reason.CARD_REMOVED))
+        tap(CardRead.Started, CardRead.Failure(Reason.NOT_A_NAVEGANTE_CARD))
+
+        // Only the result: no card number, passes or trips.
+        assertEquals(
+            listOf(cardRead("success"), cardRead("card_removed"), cardRead("not_navegante")),
+            analytics.events,
+        )
+    }
+
+    @Test
+    fun nfcOff_logsCardReadNfcOff() = runTest {
+        reader.nfcOff = true
+        showScreen()
+        runCurrent()
+
+        assertEquals(listOf(cardRead("nfc_off")), analytics.events)
     }
 }
