@@ -68,6 +68,14 @@ iosApp/                       # iOS entry point (iOSApp.swift starts Koin)
 - **`:calypso-nfc`** is a separate SDK module: the app depends on it, never the other way round.
   It is read-only by design (writing to a card needs the operator's keys).
 
+### Module structure (planned)
+
+The app is moving to feature modules, so new screens stay independent: `app` holds the
+navigation (bottom bar Map | Card) and wiring, each feature keeps its own data / domain /
+presentation, and `core` only shares technical pieces.
+
+![Planned module architecture](art/module-architecture.svg)
+
 ### Card reader (NFC)
 
 How the Navegante card reader is split between the app's layers and the `:calypso-nfc` SDK,

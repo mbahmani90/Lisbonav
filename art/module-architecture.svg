@@ -1,0 +1,195 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 920" width="1400" height="920" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title>Lisbonav — planned module architecture</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#DC2626"/>
+    </marker>
+    <style>
+      .title { font-size: 22px; font-weight: 700; fill: #0F172A; }
+      .sub { font-size: 12.5px; fill: #64748B; }
+      .panelTitle { font-size: 15px; font-weight: 700; fill: #0F172A; }
+      .name { font-size: 15px; font-weight: 700; fill: #0F172A; text-anchor: middle; }
+      .desc { font-size: 11px; fill: #334155; text-anchor: middle; }
+      .chip { font-size: 10.5px; font-weight: 700; fill: #334155; text-anchor: middle; }
+      .chipsub { font-size: 9.5px; fill: #475569; text-anchor: middle; }
+      .small { font-size: 11px; fill: #475569; }
+      .note { font-size: 12px; fill: #1E293B; }
+      .mono { font-family: Menlo, Consolas, monospace; font-size: 10.5px; fill: #0F172A; }
+      .dep { stroke: #475569; stroke-width: 1.7; fill: none; marker-end: url(#arrow); }
+      .panel { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.2; }
+    </style>
+  </defs>
+
+  <rect width="1400" height="920" fill="#F8FAFC"/>
+
+  <text x="40" y="34" class="title">Lisbonav — module architecture (planned)</text>
+  <text x="40" y="56" class="sub">Platform shells → app (navigation + wiring) → independent feature modules → core · arrows = "depends on"</text>
+
+  <!-- ===================== GRAPH ===================== -->
+
+  <!-- Row 1: platform shells -->
+  <rect x="150" y="84" width="220" height="56" rx="10" fill="#E2E8F0" stroke="#64748B" stroke-width="1.5"/>
+  <text x="260" y="108" class="name">androidApp</text>
+  <text x="260" y="126" class="desc">MainActivity · LisbonavApp</text>
+  <rect x="610" y="84" width="220" height="56" rx="10" fill="#E2E8F0" stroke="#64748B" stroke-width="1.5"/>
+  <text x="720" y="108" class="name">iosApp</text>
+  <text x="720" y="126" class="desc">SwiftUI shell · imports "Shared"</text>
+
+  <!-- Row 2: app -->
+  <rect x="80" y="186" width="880" height="84" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.8"/>
+  <text x="520" y="214" class="name">app</text>
+  <text x="520" y="234" class="desc">App.kt · NavHost + bottom bar (Map | Card) · Koin startup (all modules) · builds the iOS "Shared" framework</text>
+  <text x="520" y="254" class="desc" fill="#2563EB">today's :shared, renamed</text>
+
+  <path d="M260 142 L260 184" class="dep"/>
+  <path d="M720 142 L720 184" class="dep"/>
+
+  <!-- Row 3: features -->
+  <rect x="80" y="326" width="340" height="150" rx="12" fill="#DCFCE7" stroke="#16A34A" stroke-width="1.8"/>
+  <text x="250" y="350" class="name">feature:map</text>
+  <text x="250" y="368" class="desc">live buses on Google Maps / MapKit · line search</text>
+  <rect x="96" y="382" width="98" height="80" rx="8" fill="#FFFFFF" stroke="#16A34A"/>
+  <text x="145" y="400" class="chip">data</text>
+  <text x="145" y="416" class="chipsub">Carris API</text>
+  <text x="145" y="430" class="chipsub">DTOs · mapper</text>
+  <text x="145" y="444" class="chipsub">repository</text>
+  <rect x="201" y="382" width="98" height="80" rx="8" fill="#FFFFFF" stroke="#16A34A"/>
+  <text x="250" y="400" class="chip">domain</text>
+  <text x="250" y="416" class="chipsub">Vehicle</text>
+  <text x="250" y="430" class="chipsub">GetVehicles</text>
+  <text x="250" y="444" class="chipsub">UseCase</text>
+  <rect x="306" y="382" width="98" height="80" rx="8" fill="#FFFFFF" stroke="#16A34A"/>
+  <text x="355" y="400" class="chip">presentation</text>
+  <text x="355" y="416" class="chipsub">VehicleMap</text>
+  <text x="355" y="430" class="chipsub">ViewModel</text>
+  <text x="355" y="444" class="chipsub">map screen</text>
+
+  <rect x="470" y="326" width="280" height="150" rx="12" fill="#F3E8FF" stroke="#9333EA" stroke-width="1.8"/>
+  <text x="610" y="350" class="name">feature:card</text>
+  <text x="610" y="368" class="desc">Navegante card: tap → passes, trips</text>
+  <rect x="482" y="382" width="82" height="80" rx="8" fill="#FFFFFF" stroke="#9333EA"/>
+  <text x="523" y="400" class="chip">data</text>
+  <text x="523" y="416" class="chipsub">CardReader</text>
+  <text x="523" y="430" class="chipsub">Impl</text>
+  <text x="523" y="444" class="chipsub">mapper</text>
+  <rect x="569" y="382" width="82" height="80" rx="8" fill="#FFFFFF" stroke="#9333EA"/>
+  <text x="610" y="400" class="chip">domain</text>
+  <text x="610" y="416" class="chipsub">NaveganteCard</text>
+  <text x="610" y="430" class="chipsub">ReadCard</text>
+  <text x="610" y="444" class="chipsub">UseCase</text>
+  <rect x="656" y="382" width="82" height="80" rx="8" fill="#FFFFFF" stroke="#9333EA"/>
+  <text x="697" y="400" class="chip">presentation</text>
+  <text x="697" y="416" class="chipsub">CardView</text>
+  <text x="697" y="430" class="chipsub">Model</text>
+  <text x="697" y="444" class="chipsub">card screen</text>
+
+  <rect x="800" y="346" width="160" height="110" rx="12" fill="#EDE9FE" stroke="#7C3AED" stroke-width="1.8"/>
+  <text x="880" y="374" class="name">calypso-nfc</text>
+  <text x="880" y="394" class="desc">SDK (exists)</text>
+  <text x="880" y="410" class="desc">NFC transport · APDUs</text>
+  <text x="880" y="426" class="desc">CalypsoReader</text>
+  <text x="880" y="442" class="desc">no UI · no app types</text>
+
+  <!-- app → features -->
+  <path d="M250 272 L250 324" class="dep"/>
+  <path d="M610 272 L610 324" class="dep"/>
+  <!-- card → sdk -->
+  <path d="M752 401 L798 401" class="dep"/>
+
+  <!-- forbidden feature ↔ feature -->
+  <path d="M422 410 L468 410" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="5 4" fill="none" marker-end="url(#arrowRed)" marker-start="url(#arrowRed)"/>
+  <circle cx="445" cy="410" r="10" fill="#FFFFFF" stroke="#DC2626" stroke-width="1.6"/>
+  <text x="445" y="415" font-size="13" font-weight="700" fill="#DC2626" text-anchor="middle">✕</text>
+  <text x="445" y="496" font-size="11" font-weight="700" fill="#DC2626" text-anchor="middle">features never</text>
+  <text x="445" y="510" font-size="11" font-weight="700" fill="#DC2626" text-anchor="middle">depend on each other</text>
+
+  <!-- Row 4: core -->
+  <rect x="80" y="550" width="670" height="74" rx="12" fill="#FFEDD5" stroke="#EA580C" stroke-width="1.8"/>
+  <text x="415" y="576" class="name">core</text>
+  <text x="415" y="596" class="desc">createHttpClient(engine) · OkHttp / Darwin engines · theme &amp; shared UI components · common helpers</text>
+  <text x="415" y="613" class="desc" fill="#C2410C">technical only — no business logic, no routes, no database until a feature needs one</text>
+
+  <path d="M250 478 L250 548" class="dep"/>
+  <path d="M610 478 L610 548" class="dep"/>
+  <!-- app → core (between feature:card and calypso-nfc) -->
+  <path d="M775 272 L775 520 L700 548" class="dep"/>
+  <text x="783" y="510" class="small">app uses core</text>
+
+  <!-- ===================== RULES ===================== -->
+  <rect x="40" y="664" width="960" height="226" rx="12" class="panel"/>
+  <text x="56" y="690" class="panelTitle">Rules</text>
+  <text x="56" y="716" class="note">• <tspan font-weight="700">app</tspan> is the only module that knows all features: it builds the NavHost, the bottom bar and the Koin graph.</text>
+  <text x="56" y="740" class="note">• <tspan font-weight="700">Each feature owns its route</tspan> and exposes one entry point; moving between screens goes through app.</text>
+  <text x="56" y="764" class="note">• <tspan font-weight="700">Inside a feature</tspan>: data / domain / presentation packages, as today (domain has no Android, Ktor or NFC types).</text>
+  <text x="56" y="788" class="note">• <tspan font-weight="700">core</tspan> stays technical; <tspan font-weight="700">calypso-nfc</tspan> is used only by feature:card and never depends on the app.</text>
+
+  <line x1="56" y1="828" x2="96" y2="828" class="dep"/>
+  <text x="104" y="832" class="small">depends on</text>
+  <line x1="200" y1="828" x2="240" y2="828" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrowRed)"/>
+  <text x="248" y="832" class="small">forbidden</text>
+  <rect x="330" y="818" width="30" height="20" rx="4" fill="#DBEAFE" stroke="#2563EB"/>
+  <text x="368" y="832" class="small">composition root</text>
+  <rect x="480" y="818" width="30" height="20" rx="4" fill="#DCFCE7" stroke="#16A34A"/>
+  <text x="518" y="832" class="small">feature</text>
+  <rect x="580" y="818" width="30" height="20" rx="4" fill="#FFEDD5" stroke="#EA580C"/>
+  <text x="618" y="832" class="small">core</text>
+  <rect x="670" y="818" width="30" height="20" rx="4" fill="#EDE9FE" stroke="#7C3AED"/>
+  <text x="708" y="832" class="small">SDK</text>
+  <text x="56" y="868" class="small">Later, with 4+ similar KMP modules: a build-logic convention plugin for the shared Gradle setup. Storage (SQLDelight) only when a feature needs it.</text>
+
+  <!-- ===================== NAVIGATION ===================== -->
+  <rect x="1040" y="80" width="320" height="400" rx="12" class="panel"/>
+  <text x="1056" y="106" class="panelTitle">Navigation</text>
+
+  <!-- phone mock -->
+  <rect x="1070" y="124" width="120" height="236" rx="16" fill="#1E293B"/>
+  <rect x="1077" y="136" width="106" height="212" rx="8" fill="#E0F2FE"/>
+  <rect x="1087" y="146" width="86" height="16" rx="8" fill="#EEEEEE" fill-opacity="0.9"/>
+  <circle cx="1110" cy="210" r="7" fill="#FFDD00" stroke="#1C1C1C"/>
+  <circle cx="1146" cy="240" r="7" fill="#FFDD00" stroke="#1C1C1C"/>
+  <circle cx="1124" cy="272" r="7" fill="#FFDD00" stroke="#1C1C1C"/>
+  <rect x="1077" y="318" width="106" height="30" fill="#FFFFFF"/>
+  <rect x="1083" y="322" width="44" height="22" rx="11" fill="#DBEAFE"/>
+  <text x="1105" y="337" font-size="10" font-weight="700" fill="#1D4ED8" text-anchor="middle">Map</text>
+  <text x="1156" y="337" font-size="10" fill="#475569" text-anchor="middle">Card</text>
+
+  <text x="1204" y="140" class="small" font-weight="700">bottom bar in app</text>
+  <text x="1204" y="156" class="small">Map | Card</text>
+  <text x="1204" y="180" class="small">selected tab comes</text>
+  <text x="1204" y="196" class="small">from the back stack</text>
+  <text x="1204" y="220" class="small">(no extra screen state)</text>
+
+  <text x="1056" y="384" class="small" font-weight="700">Navigation Compose (KMP), type-safe routes:</text>
+  <text x="1056" y="404" class="mono">@Serializable object MapRoute</text>
+  <text x="1056" y="420" class="mono">fun NavGraphBuilder.mapScreen()</text>
+  <text x="1056" y="440" class="mono">@Serializable object CardRoute</text>
+  <text x="1056" y="456" class="mono">fun NavGraphBuilder.cardScreen()</text>
+
+  <!-- ===================== MIGRATION ===================== -->
+  <rect x="1040" y="500" width="320" height="390" rx="12" class="panel"/>
+  <text x="1056" y="526" class="panelTitle">Migration (one PR each)</text>
+
+  <rect x="1056" y="540" width="288" height="72" rx="10" fill="#FFEDD5" stroke="#EA580C"/>
+  <text x="1070" y="562" font-size="13" font-weight="700" fill="#0F172A">1 · core</text>
+  <text x="1070" y="580" class="small">HTTP client factory, engines, theme</text>
+  <text x="1070" y="596" class="small">move out of :shared</text>
+
+  <rect x="1056" y="622" width="288" height="72" rx="10" fill="#DCFCE7" stroke="#16A34A"/>
+  <text x="1070" y="644" font-size="13" font-weight="700" fill="#0F172A">2 · feature:map</text>
+  <text x="1070" y="662" class="small">API, DTOs, mapper, repository, use case,</text>
+  <text x="1070" y="678" class="small">ViewModel, screen + tests + Koin module</text>
+
+  <rect x="1056" y="704" width="288" height="72" rx="10" fill="#DBEAFE" stroke="#2563EB"/>
+  <text x="1070" y="726" font-size="13" font-weight="700" fill="#0F172A">3 · :shared → app</text>
+  <text x="1070" y="744" class="small">App.kt, Koin startup; Xcode script</text>
+  <text x="1070" y="760" class="small">:app:embedAndSignAppleFramework…</text>
+
+  <rect x="1056" y="786" width="288" height="88" rx="10" fill="#F3E8FF" stroke="#9333EA"/>
+  <text x="1070" y="808" font-size="13" font-weight="700" fill="#0F172A">4 · navigation + feature:card</text>
+  <text x="1070" y="826" class="small">NavHost + bottom bar (Map | Card)</text>
+  <text x="1070" y="842" class="small">card screen as placeholder; NFC work</text>
+  <text x="1070" y="858" class="small">continues there with calypso-nfc</text>
+</svg>
