@@ -25,7 +25,7 @@ kotlin {
        minSdk = libs.versions.android.minSdk.get().toInt()
     
        compilerOptions {
-           jvmTarget = JvmTarget.JVM_11
+           jvmTarget = JvmTarget.JVM_17
        }
        androidResources {
            enable = true
@@ -45,6 +45,7 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.maps.compose)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -68,6 +69,7 @@ kotlin {
             // DI: `api` because initKoin() exposes Koin types to the apps
             api(libs.koin.core)
             implementation(libs.koin.core.viewmodel)
+            implementation(libs.koin.compose.viewmodel)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

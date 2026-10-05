@@ -1,0 +1,6 @@
+<resources>
+    <string name="vehicle_line">Line</string>
+    <string name="error_no_connection">No connection. Showing the last known positions.</string>
+    <string name="error_service">Bus positions are unavailable right now.</string>
+    <string name="retry">Retry</string>
+</resources>

@@ -14,6 +14,7 @@ A Kotlin Multiplatform app for getting around Lisbon, for **Android and iOS** fr
 |---|---|
 | Shared code | Kotlin Multiplatform (Android + iOS) |
 | UI | Compose Multiplatform |
+| Map | Google Maps (Maps Compose) on Android, Apple MapKit on iOS |
 | Networking | Ktor (OkHttp engine on Android, Darwin on iOS) |
 | JSON | kotlinx.serialization |
 | Dependency injection | Koin |
@@ -48,10 +49,11 @@ shared/src/
 │   │   ├── mapper/           # DTO → domain (drops vehicles without a usable position)
 │   │   └── repository/       # VehicleRepositoryImpl: errors returned as Result
 │   ├── presentation/
-│   │   └── viewmodel/        # VehicleMapViewModel: polls every 10 s while the map is visible
+│   │   ├── viewmodel/        # VehicleMapViewModel: polls every 10 s while the map is visible
+│   │   └── ui/map/           # VehicleMapScreen (shared) + expect VehicleMap
 │   └── di/                   # Koin modules, initKoin()
-├── androidMain/…/di/         # OkHttp engine
-└── iosMain/…/di/             # Darwin engine, initKoinIos() for Swift
+├── androidMain/…/            # OkHttp engine, Google Maps VehicleMap
+└── iosMain/…/                # Darwin engine, MapKit VehicleMap, initKoinIos() for Swift
 androidApp/                   # Android entry point (LisbonavApp starts Koin)
 iosApp/                       # iOS entry point (iOSApp.swift starts Koin)
 ```
@@ -59,6 +61,23 @@ iosApp/                       # iOS entry point (iOSApp.swift starts Koin)
 - The **engine** is the only platform-specific networking piece. JSON, base URL and error
   handling are Ktor plugins in common code, so both platforms behave the same.
 - Every API sits behind an **interface**, so the repository and ViewModels can be tested with fakes.
+
+## Setup: Google Maps key (Android only)
+
+iOS uses MapKit and needs no key. On Android, the map stays empty without a Google Maps key
+(the app still builds and runs).
+
+1. In [Google Cloud Console](https://console.cloud.google.com/), enable **Maps SDK for Android**
+   and create an API key (a billing account is required; map loads in the Android SDK are free).
+2. Restrict the key to **Android apps**: package `com.majidbahmani.lisbonav` and your signing
+   certificate SHA-1 (`./gradlew :androidApp:signingReport`), and to the Maps SDK for Android API.
+3. Add it to `local.properties` (gitignored, never committed):
+
+       MAPS_API_KEY=your_key_here
+
+   CI can set a `MAPS_API_KEY` environment variable instead.
+
+A key inside an APK is not secret; the Android restriction is what protects it from misuse.
 
 ## Build & run
 
@@ -87,7 +106,7 @@ Shared tests run on both platforms, without network access:
 - [x] Vehicles API client and DTO (Ktor + kotlinx.serialization)
 - [x] Dependency injection (Koin, platform HTTP engines)
 - [x] Domain model, mapper and repository
-- [ ] ViewModel and map screen with live bus positions
+- [x] ViewModel and map screen with live bus positions
 - [ ] Request logging (debug only) and timeouts
 - [ ] CI (GitHub Actions)
 - [ ] Navegante card reader (NFC, Android first)
