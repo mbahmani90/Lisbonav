@@ -2,6 +2,7 @@ package com.majidbahmani.lisbonav.di
 
 import com.majidbahmani.lisbonav.core.di.httpEngineModule
 import com.majidbahmani.lisbonav.core.di.networkModule
+import com.majidbahmani.lisbonav.feature.map.di.mapModule
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
@@ -11,11 +12,8 @@ internal val appModules = listOf(
     // :core
     httpEngineModule,
     networkModule,
-    // this app
-    apiModule,
-    repositoryModule,
-    useCaseModule,
-    viewModelModule,
+    // features
+    mapModule,
 )
 
 /**

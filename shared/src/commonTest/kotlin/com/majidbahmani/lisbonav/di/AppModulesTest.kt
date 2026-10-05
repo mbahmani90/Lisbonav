@@ -1,11 +1,6 @@
 package com.majidbahmani.lisbonav.di
 
-import com.majidbahmani.lisbonav.data.remote.CarrisMetropolitanaApi
-import com.majidbahmani.lisbonav.data.remote.KtorCarrisMetropolitanaApi
-import com.majidbahmani.lisbonav.data.repository.VehicleRepositoryImpl
-import com.majidbahmani.lisbonav.domain.repository.VehicleRepository
-import com.majidbahmani.lisbonav.domain.usecase.GetVehiclesUseCase
-import com.majidbahmani.lisbonav.presentation.viewmodel.VehicleMapViewModel
+import com.majidbahmani.lisbonav.feature.map.presentation.viewmodel.VehicleMapViewModel
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,10 +13,12 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertIs
-import kotlin.test.assertNotSame
 import kotlin.test.assertSame
 
-/** Resolves the real module graph on each platform (OkHttp on Android, Darwin on iOS); no network calls. */
+/**
+ * The whole app graph (:core + every feature) resolves on each platform (OkHttp on Android,
+ * Darwin on iOS); no network calls. Each feature tests its own bindings in detail.
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 class AppModulesTest {
 
@@ -39,22 +36,8 @@ class AppModulesTest {
     }
 
     @Test
-    fun api_resolvesToKtorImplementation() {
-        assertIs<KtorCarrisMetropolitanaApi>(app.koin.get<CarrisMetropolitanaApi>())
-    }
-
-    @Test
-    fun vehicleRepository_resolvesToImplementation() {
-        assertIs<VehicleRepositoryImpl>(app.koin.get<VehicleRepository>())
-    }
-
-    @Test
-    fun getVehiclesUseCase_isNewInstancePerInjection() {
-        assertNotSame(app.koin.get<GetVehiclesUseCase>(), app.koin.get<GetVehiclesUseCase>())
-    }
-
-    @Test
-    fun vehicleMapViewModel_resolves() {
+    fun mapScreen_viewModelResolves_withTheWholeChain() {
+        // Needs mapModule (use case, repository, API) and :core (HttpClient, engine).
         assertIs<VehicleMapViewModel>(app.koin.get<VehicleMapViewModel>())
     }
 
