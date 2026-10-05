@@ -101,15 +101,16 @@ iosApp/                       # iOS entry point (iOSApp.swift starts Koin)
 - **`:calypso-nfc`** is a separate SDK module: the app depends on it, never the other way round.
   It is read-only by design (writing to a card needs the operator's keys).
 
-### Module structure (planned)
+### Module structure
 
-The app is moving to feature modules, so new screens stay independent: `app` holds the
-navigation (bottom bar Map | Card) and wiring, and each feature keeps its own data / domain /
-presentation layers, including its screens and ViewModels. `:systemdesign` only holds the theme and
-small components used by more than one feature (search field, error banner); `:core` shares
-non-UI code (HTTP client, engines).
+Features are separate modules, so new screens stay independent: `app` holds the navigation
+(bottom bar Map | Card) and wiring, and each feature keeps its own data / domain / presentation
+layers, including its screens and ViewModels. `:systemdesign` holds the theme (and components once
+more than one feature shares them); `:core` shares non-UI code (HTTP client, engines).
+`:analytics` is only an interface: Firebase has no KMP SDK, so `androidApp` (Kotlin) and `iosApp`
+(Swift) implement it and pass it to `initKoin`.
 
-![Planned module architecture](art/module-architecture.svg)
+![Module architecture](art/module-architecture.svg)
 
 ### Card reader (NFC)
 
