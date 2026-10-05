@@ -22,3 +22,5 @@ or a circle (`ic_launcher_round`) at 48/72/96/144/192 px.
 
 - `nfc-calypso-architecture.svg`: the Navegante card reader (app layers, `:calypso-nfc` SDK,
   APDUs over NFC, build steps). Shown in the main README.
+- `module-architecture.svg`: planned module structure (app, feature modules, core, SDK) and
+  the migration steps. Shown in the main README.
