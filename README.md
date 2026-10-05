@@ -1,5 +1,7 @@
 # Lisbonav
 
+[![CI](https://github.com/mbahmani90/Lisbonav/actions/workflows/ci.yml/badge.svg)](https://github.com/mbahmani90/Lisbonav/actions/workflows/ci.yml)
+
 A Kotlin Multiplatform app for getting around Lisbon, for **Android and iOS** from one shared codebase.
 
 - **Live bus map:** real-time positions of Carris Metropolitana buses on a map, with a search bar
