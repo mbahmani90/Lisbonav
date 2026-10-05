@@ -1,5 +1,7 @@
 package com.majidbahmani.lisbonav.di
 
+import com.majidbahmani.lisbonav.analytics.Analytics
+import com.majidbahmani.lisbonav.analytics.AnalyticsEvent
 import com.majidbahmani.lisbonav.feature.map.presentation.viewmodel.VehicleMapViewModel
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +26,11 @@ class AppModulesTest {
 
     // A local KoinApplication, not startKoin(): tests don't touch the global Koin instance.
     // No eager instances: the Android NFC tag reader needs a real Application, which host tests don't have.
-    private val app: KoinApplication = koinApplication(createEagerInstances = false) { modules(appModules) }
+    private val analytics = FakeAnalytics()
+
+    private val app: KoinApplication = koinApplication(createEagerInstances = false) {
+        modules(listOf(analyticsModule(analytics)) + appModules)
+    }
 
     // ViewModels start coroutines in viewModelScope (Dispatchers.Main), which tests don't have.
     @BeforeTest
@@ -43,7 +49,18 @@ class AppModulesTest {
     }
 
     @Test
+    fun analytics_isTheInstanceThePlatformAppPassedIn() {
+        assertSame<Analytics>(analytics, app.koin.get<Analytics>())
+    }
+
+    @Test
     fun httpClient_isSingleton() {
         assertSame(app.koin.get<HttpClient>(), app.koin.get<HttpClient>())
     }
+}
+
+/** Stands in for the platform app's implementation (Firebase on the devices). */
+private class FakeAnalytics : Analytics {
+    override fun log(event: AnalyticsEvent) = Unit
+    override fun setCollectionEnabled(enabled: Boolean) = Unit
 }
