@@ -1,0 +1,163 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A new push to the same branch cancels the run in progress.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Least privilege: read the code and the PR's file list. No secrets are used: the debug build
+# works without google-services.json and the Maps key (the map tiles are just grey).
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  changes:
+    name: Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+      workflow: ${{ steps.filter.outputs.workflow }}
+    steps:
+      - uses: actions/checkout@v7 # pushes are compared with git
+      - id: filter
+        uses: dorny/paths-filter@v4
+        with:
+          # "matches at least one pattern and none of the ! patterns"
+          predicate-quantifier: some-with-excludes
+          filters: |
+            code:
+              - '**'
+              - '!**/*.md'
+              - '!art/**'
+            workflow:
+              - '.github/workflows/**'
+
+  build:
+    name: Build
+    needs: changes
+    if: ${{ needs.changes.outputs.code == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: zulu # gradle-daemon-jvm.properties asks for Azul 21: no toolchain download
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6 # caching + wrapper validation
+      - run: ./gradlew :androidApp:assembleDebug
+      - uses: actions/upload-artifact@v7
+        with:
+          name: debug-apk
+          path: androidApp/build/outputs/apk/debug/*.apk
+          retention-days: 7
+
+  unit-tests:
+    name: Unit tests
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: zulu
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+      # Every module's commonTest + androidHostTest on the JVM.
+      - run: ./gradlew testAndroidHostTest
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: unit-test-reports
+          path: "**/build/reports/tests/"
+          retention-days: 7
+
+  lint:
+    name: Android Lint
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: zulu
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+      # The KMP library modules have no Android Lint task (AGP 9.1); this checks the app module.
+      - run: ./gradlew :androidApp:lintDebug
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: lint-report
+          path: androidApp/build/reports/lint-results-debug.*
+          retention-days: 7
+
+  code-style:
+    name: Code style
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: zulu
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+      - run: ./gradlew spotlessCheck
+
+  ios:
+    name: iOS
+    needs: changes
+    # macOS runners are slow: on main only, and on PRs that change this workflow (so a broken
+    # iOS job shows up before it is merged).
+    if: ${{ needs.changes.outputs.code == 'true' && (github.event_name == 'push' || needs.changes.outputs.workflow == 'true') }}
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: zulu
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Cache Kotlin/Native toolchain
+        uses: actions/cache@v6
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+      # Every module's commonTest + iosTest on the simulator. The Swift app itself (3 small files)
+      # isn't built here: xcodebuild with Firebase from SPM took over 30 minutes on a cold runner.
+      - run: ./gradlew iosSimulatorArm64Test
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: ios-test-reports
+          path: "**/build/reports/tests/"
+          retention-days: 7
+
+  ci-result:
+    name: CI result
+    needs: [changes, build, unit-tests, lint, code-style, ios]
+    if: ${{ always() }} # also when something failed or was skipped
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # One required check for branch protection: passes when every job succeeded or was
+      # skipped (docs-only changes, iOS on PRs), fails on failure or cancellation.
+      - env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Job results: $RESULTS"
+          for result in $RESULTS; do
+            if [ "$result" = "failure" ] || [ "$result" = "cancelled" ]; then exit 1; fi
+          done
