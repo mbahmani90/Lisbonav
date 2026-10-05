@@ -3,12 +3,12 @@ package com.majidbahmani.lisbonav.feature.consent.domain.usecase
 import com.majidbahmani.lisbonav.feature.consent.domain.model.AnalyticsConsent
 import com.majidbahmani.lisbonav.feature.consent.fake.FakeAnalytics
 import com.majidbahmani.lisbonav.feature.consent.fake.FakeConsentRepository
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ApplyAnalyticsConsentUseCaseTest {

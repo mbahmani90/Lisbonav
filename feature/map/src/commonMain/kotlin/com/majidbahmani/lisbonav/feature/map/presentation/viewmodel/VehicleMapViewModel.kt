@@ -10,6 +10,8 @@ import com.majidbahmani.lisbonav.analytics.Analytics
 import com.majidbahmani.lisbonav.feature.map.domain.usecase.GetVehiclesUseCase
 import com.majidbahmani.lisbonav.feature.map.presentation.analytics.MapAnalyticsEvents
 import com.majidbahmani.lisbonav.feature.map.presentation.viewmodel.VehicleMapUiState.ErrorReason
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,8 +28,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.io.IOException
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 /**
  * Polls the vehicles while the map is visible.
@@ -112,6 +112,7 @@ class VehicleMapViewModel(
     private fun Throwable.toErrorReason(): ErrorReason = when (this) {
         // Offline, DNS, timeouts (OkHttp and Darwin errors are IOExceptions).
         is IOException -> ErrorReason.NO_CONNECTION
+
         // HTTP errors, malformed responses.
         else -> ErrorReason.SERVICE
     }

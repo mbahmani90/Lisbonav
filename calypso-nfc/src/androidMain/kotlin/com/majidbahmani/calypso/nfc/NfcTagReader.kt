@@ -8,11 +8,11 @@ import android.nfc.tech.IsoDep
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import java.lang.ref.WeakReference
+import java.util.concurrent.CopyOnWriteArraySet
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import java.lang.ref.WeakReference
-import java.util.concurrent.CopyOnWriteArraySet
 
 /**
  * Cards tapped on the phone, as ISO 14443-4 [IsoDep] (Calypso, DESFire, EMV, …), using NFC reader mode.

@@ -1,5 +1,8 @@
 package com.majidbahmani.lisbonav.feature.map.presentation.ui.map
 
+import com.majidbahmani.lisbonav.feature.map.presentation.ui.map.BusMarkerStyle as Style
+import kotlin.math.PI
+import kotlin.math.min
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import platform.CoreGraphics.CGAffineTransformMakeRotation
@@ -12,9 +15,6 @@ import platform.UIKit.UIColor
 import platform.UIKit.UIGraphicsImageRenderer
 import platform.UIKit.UIImage
 import platform.UIKit.UIImageRenderingMode
-import kotlin.math.PI
-import kotlin.math.min
-import com.majidbahmani.lisbonav.feature.map.presentation.ui.map.BusMarkerStyle as Style
 
 /** Draws the bus marker ([BusMarkerStyle]) as a UIImage, once per heading bucket. */
 @OptIn(ExperimentalForeignApi::class)

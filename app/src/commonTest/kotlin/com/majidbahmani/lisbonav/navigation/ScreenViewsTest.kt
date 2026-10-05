@@ -1,11 +1,11 @@
 package com.majidbahmani.lisbonav.navigation
 
 import com.majidbahmani.lisbonav.analytics.AnalyticsEvent
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class ScreenViewsTest {
 

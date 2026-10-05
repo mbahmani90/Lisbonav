@@ -4,6 +4,11 @@ import com.majidbahmani.lisbonav.analytics.Analytics
 import com.majidbahmani.lisbonav.analytics.AnalyticsEvent
 import com.majidbahmani.lisbonav.feature.map.presentation.viewmodel.VehicleMapViewModel
 import io.ktor.client.HttpClient
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertIs
+import kotlin.test.assertSame
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -11,11 +16,6 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.koin.core.KoinApplication
 import org.koin.dsl.koinApplication
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertIs
-import kotlin.test.assertSame
 
 /**
  * The whole app graph (:core + every feature) resolves on each platform (OkHttp on Android,

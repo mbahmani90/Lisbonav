@@ -6,6 +6,12 @@ import com.majidbahmani.lisbonav.feature.consent.domain.usecase.ObserveConsentNe
 import com.majidbahmani.lisbonav.feature.consent.domain.usecase.SetAnalyticsConsentUseCase
 import com.majidbahmani.lisbonav.feature.consent.fake.FakeAnalytics
 import com.majidbahmani.lisbonav.feature.consent.fake.FakeConsentRepository
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -15,12 +21,6 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ConsentViewModelTest {

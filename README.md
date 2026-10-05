@@ -178,6 +178,14 @@ Requirements: Android Studio (with the Kotlin Multiplatform plugin), JDK 21 (req
 ./gradlew :app:linkDebugFrameworkIosSimulatorArm64
 ```
 
+Code style: [ktlint](https://pinterest.github.io/ktlint/) (Android Studio style, trailing commas
+allowed) with the [Compose rules](https://mrmans0n.github.io/compose-rules/), through Spotless.
+
+```bash
+./gradlew spotlessApply   # format before committing
+./gradlew spotlessCheck   # what CI will run
+```
+
 ## Tests
 
 Shared tests run on both platforms, without network access:

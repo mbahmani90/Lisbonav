@@ -22,7 +22,10 @@ class ApduTest {
 
     @Test
     fun readRecord_calypsoClassAndExpectedLength() {
-        assertEquals("94B2013C1D", Apdu.readRecord(sfi = 0x07, record = 1, cla = Apdu.CLA_CALYPSO, expectedLength = 0x1D).toHex())
+        assertEquals(
+            "94B2013C1D",
+            Apdu.readRecord(sfi = 0x07, record = 1, cla = Apdu.CLA_CALYPSO, expectedLength = 0x1D).toHex(),
+        )
     }
 
     @Test

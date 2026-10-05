@@ -10,6 +10,11 @@ import com.majidbahmani.lisbonav.feature.consent.fake.createTestDataStore
 import com.majidbahmani.lisbonav.feature.consent.fake.deleteDataStoreFile
 import com.majidbahmani.lisbonav.feature.consent.fake.newDataStorePath
 import com.majidbahmani.lisbonav.feature.consent.presentation.viewmodel.ConsentViewModel
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertIs
+import kotlin.test.assertSame
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,11 +25,6 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertIs
-import kotlin.test.assertSame
 
 /** The feature's bindings, with a test DataStore (from :core in the app) and a fake Analytics. */
 @OptIn(ExperimentalCoroutinesApi::class)

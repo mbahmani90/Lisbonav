@@ -47,13 +47,14 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun App() {
+fun App(modifier: Modifier = Modifier) {
     LisbonavTheme {
         // An object kept in composition (doc 29 allows it): the back stack is the navigation state.
         val navController = rememberNavController()
         LogScreenViews(navController)
 
         Scaffold(
+            modifier = modifier,
             bottomBar = { LisbonavBottomBar(navController) },
             // Screens handle the status bar themselves (the map draws behind it).
             contentWindowInsets = WindowInsets(0),

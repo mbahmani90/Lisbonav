@@ -5,9 +5,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -109,7 +109,9 @@ fun VehicleMapScreen(
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
                 // Below the status bar / notch, then the requested spacing.
-                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
+                .windowInsetsPadding(
+                    WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+                )
                 .padding(start = 32.dp, end = 32.dp, top = 4.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -157,7 +159,11 @@ private fun LineSearchBar(
                 modifier = Modifier.padding(start = 12.dp, end = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(painterResource(Res.drawable.ic_search), contentDescription = null, modifier = Modifier.size(20.dp))
+                Icon(
+                    painterResource(Res.drawable.ic_search),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                )
                 Box(Modifier.weight(1f).padding(horizontal = 8.dp)) {
                     if (query.isEmpty()) {
                         Text(

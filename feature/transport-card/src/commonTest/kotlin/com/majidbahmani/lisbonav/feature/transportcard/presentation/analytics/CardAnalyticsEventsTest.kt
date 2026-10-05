@@ -10,7 +10,9 @@ class CardAnalyticsEventsTest {
 
     @Test
     fun everyFailureReason_hasItsOwnResult() {
-        val results = Reason.entries.associateWith { CardAnalyticsEvents.cardRead(CardRead.Failure(it))?.params?.get("result") }
+        val results = Reason.entries.associateWith {
+            CardAnalyticsEvents.cardRead(CardRead.Failure(it))?.params?.get("result")
+        }
 
         assertEquals(
             mapOf(

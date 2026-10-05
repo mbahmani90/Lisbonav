@@ -9,12 +9,12 @@ import com.majidbahmani.lisbonav.feature.transportcard.domain.model.CardRead.Rea
 import com.majidbahmani.lisbonav.feature.transportcard.fake.FakeCardTapSource
 import com.majidbahmani.lisbonav.feature.transportcard.fake.FakeTappedCard
 import com.majidbahmani.lisbonav.feature.transportcard.fake.lisboaCard
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
 
 class CalypsoTransportCardReaderTest {
 
@@ -54,7 +54,9 @@ class CalypsoTransportCardReaderTest {
 
     @Test
     fun recordsThatDontFitTheLayout_areNotALisbonCard() = runTest {
-        val reads = reader(FakeCardTapSource(listOf(FakeTappedCard())), parse = { throw IllegalArgumentException("short record") })
+        val reads = reader(FakeCardTapSource(listOf(FakeTappedCard())), parse = {
+            throw IllegalArgumentException("short record")
+        })
             .readCards().toList()
 
         assertEquals(CardRead.Failure(Reason.NOT_A_NAVEGANTE_CARD), reads.last())
@@ -80,7 +82,9 @@ class CalypsoTransportCardReaderTest {
 
     @Test
     fun noNfc_reportsNotSupported() = runTest {
-        val reads = reader(FakeCardTapSource(error = NfcUnavailableException(NfcUnavailableException.Reason.NOT_SUPPORTED)))
+        val reads = reader(
+            FakeCardTapSource(error = NfcUnavailableException(NfcUnavailableException.Reason.NOT_SUPPORTED)),
+        )
             .readCards().toList()
 
         assertEquals(listOf(CardRead.Failure(Reason.NFC_NOT_SUPPORTED)), reads)

@@ -23,6 +23,7 @@ class ReadTransportCardUseCase(
             is CardRead.Success -> CardRead.Success(
                 read.card.copy(passes = read.card.passes.sortedForDisplay(read.card.readOn)),
             )
+
             else -> read
         }
     }
@@ -35,6 +36,7 @@ class ReadTransportCardUseCase(
         )
 
     private companion object {
-        val STATUS_ORDER = listOf(PassStatus.ACTIVE, PassStatus.NOT_STARTED, PassStatus.STORED_VALUE, PassStatus.EXPIRED)
+        val STATUS_ORDER =
+            listOf(PassStatus.ACTIVE, PassStatus.NOT_STARTED, PassStatus.STORED_VALUE, PassStatus.EXPIRED)
     }
 }
