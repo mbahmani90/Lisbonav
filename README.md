@@ -39,7 +39,8 @@ presentation ──► domain ◄── data
 ```
 
 ```
-app/                          # app shell: App() with LisbonavTheme, initKoin() (all modules), iOS "Shared" framework
+app/                          # app shell: App() with LisbonavTheme, NavHost + bottom bar (Map | Card),
+                              #   initKoin() (all modules), iOS "Shared" framework
 feature/map/src/              # feature: live buses on a map
 ├── commonMain/…/feature/map/
 │   ├── domain/
@@ -56,6 +57,7 @@ feature/map/src/              # feature: live buses on a map
 │   └── di/                   # mapModule: all the feature's Koin bindings
 ├── androidMain/…/            # Google Maps VehicleMap, bus marker icons
 └── iosMain/…/                # MapKit VehicleMap, bus marker images
+feature/transport-card/        # feature: Navegante card screen (placeholder; NFC reading via calypso-nfc next)
 core/                         # shared non-UI code: createHttpClient(engine), OkHttp / Darwin engines
 systemdesign/                 # shared design system: LisbonavTheme (components move here when 2+ features use them)
 calypso-nfc/                  # SDK: read Calypso transit cards over NFC (no UI, no app types)

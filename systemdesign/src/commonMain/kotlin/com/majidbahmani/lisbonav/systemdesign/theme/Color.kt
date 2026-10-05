@@ -9,4 +9,9 @@ internal object LisbonavColors {
 
     /** Near-black ink: primary colour, text and icons on yellow. */
     val Ink = Color(0xFF1C1C1C)
+
+    /** Neutral greys, so surfaces don't get Material's default lavender tint. */
+    val SurfaceContainer = Color(0xFFF2F2F2)
+    val SurfaceVariant = Color(0xFFE6E6E6)
+    val OnSurfaceVariant = Color(0xFF4A4A4A)
 }

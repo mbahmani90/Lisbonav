@@ -58,6 +58,8 @@ kotlin {
             implementation(project(":systemdesign"))
             implementation(project(":core"))
             implementation(project(":feature:map"))
+            implementation(project(":feature:transport-card"))
+            implementation(libs.navigation.compose) // NavHost + bottom bar
 
             // DI: `api` because initKoin() exposes Koin types to the apps
             api(libs.koin.core)
@@ -71,4 +73,8 @@ kotlin {
 
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
+}
+
+compose.resources {
+    packageOfResClass = "com.majidbahmani.lisbonav.resources"
 }
