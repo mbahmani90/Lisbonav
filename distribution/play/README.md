@@ -26,9 +26,9 @@ Release notes for each upload: [`distribution/whatsnew/whatsnew-en-US`](../whats
 |---|---|
 | Privacy policy | URL above |
 | Ads | No ads |
-| App access | All functionality is available without special access (no login) |
-| Content rating | IARC questionnaire: category *Reference, News, or Educational* / utility; no violence, sexual content, language, controlled substances, gambling; no user-generated content or chat; no purchases |
-| Target audience | 18 and over (not designed for children) |
+| Sign in details (was "App access") | No part of the app is restricted (no login, no payments) |
+| Content rating | IARC questionnaire, category *All Other App Types*: No to every question (no ratings-relevant content, no user interaction, no online media content, no age-restricted products, no location sharing, no digital purchases or rewards, not a browser, not news / educational) |
+| Target audience | 13–15, 16–17 and 18 and over (teens use the buses and student passes); not under 13, which would bring in the Families policy; "unintentionally appeals to children": No |
 | News app | No |
 | Government app | No |
 | Financial features | None |
@@ -57,6 +57,8 @@ Release notes for each upload: [`distribution/whatsnew/whatsnew-en-US`](../whats
 
 - **Not affiliated:** the description ends with the disclaimer; keep it. Don't use Carris
   Metropolitana, TML or Navegante logos in the screenshots or graphics.
-- **Maps key:** after the first upload, add the **app signing key SHA-1** (Test and release → App
-  integrity → App signing) to the Maps key's Android restrictions, or the map is grey for Play users.
+- **Maps key:** after the first upload, add the **app signing key SHA-1** to the Maps key's Android
+  restrictions, or the map is grey for Play users. In Play Console: *Protected with Play* → Play app
+  signing (App integrity moved there in 2026), or *App bundle explorer* → version → *Downloads* →
+  signing key.
 - Full walk-through, tracks, testing requirement and automation: playbook doc 38.
