@@ -1,8 +1,8 @@
 name: Release
 
-# Push a version tag → signed APK + AAB → GitHub Release (APK + checksums). The AAB is kept as an
-# artifact for Google Play. "Run workflow" (manual) is a dry run: it builds and verifies with the
-# real secrets but publishes nothing.
+# Push a version tag → signed APK + AAB → GitHub Release (APK + checksums) and, once enabled,
+# Google Play's internal testing track (AAB). "Run workflow" (manual) is a dry run: it builds and
+# verifies with the real secrets but publishes nothing.
 on:
   push:
     tags: ["v*.*.*"]
@@ -108,7 +108,7 @@ jobs:
           path: dist/
           if-no-files-found: error
           retention-days: 7
-      # For Google Play (doc 38): uploaded by hand for now, by a "play" job later.
+      # For Google Play: the "play" job uploads it; also downloadable for the first, manual upload.
       - uses: actions/upload-artifact@v7
         with:
           name: play-bundle
@@ -138,3 +138,29 @@ jobs:
           GH_REPO: ${{ github.repository }} # no checkout needed
           VERSION: ${{ needs.build.outputs.version }}
         run: gh release create "$GITHUB_REF_NAME" dist/* --title "Lisbonav $VERSION" --generate-notes --verify-tag
+
+  play:
+    name: Upload to Google Play (internal)
+    needs: build
+    # Off until Google Play is set up (doc 38): app created, first AAB uploaded by hand, service
+    # account invited, PLAY_SERVICE_ACCOUNT_JSON secret set. Then set the repository variable
+    # PLAY_UPLOAD_ENABLED=true. Promotion to other tracks stays a manual step in the Play Console.
+    if: ${{ github.event_name == 'push' && vars.PLAY_UPLOAD_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7 # release notes: distribution/whatsnew
+      - uses: actions/download-artifact@v8
+        with:
+          name: play-bundle
+          path: bundle
+      - uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.majidbahmani.lisbonav
+          releaseFiles: bundle/*.aab
+          tracks: internal
+          # "draft" while the app has never been published (the API refuses anything else then);
+          # set the variable PLAY_RELEASE_STATUS=completed after the first release is live.
+          status: ${{ vars.PLAY_RELEASE_STATUS || 'draft' }}
+          whatsNewDirectory: distribution/whatsnew
