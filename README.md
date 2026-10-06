@@ -200,6 +200,23 @@ Shared tests run on both platforms, without network access:
 ./gradlew :calypso-nfc:testAndroidHostTest :calypso-nfc:iosSimulatorArm64Test   # card SDK
 ```
 
+## CI and releases
+
+- **CI** (`.github/workflows/ci.yml`), on every PR and push to `main`: build, unit tests, Android
+  Lint and code style in parallel; the shared tests on the iOS simulator run on `main` only (and on
+  PRs that change the workflow). `main` only accepts PRs with a green **CI result**.
+- **Releases** (`.github/workflows/release.yml`): push a version tag
+
+  ```bash
+  git tag v1.0.0 && git push origin v1.0.0
+  ```
+
+  → signed APK and AAB (version `1.0.0` / `10000` from the tag) → GitHub Release with the APK and
+  `SHA256SUMS.txt`; the AAB is kept as a workflow artifact for Google Play. *Run workflow* on the
+  Release workflow is a dry run: it builds and verifies with the real secrets, publishes nothing.
+- Signing key, Maps key and Firebase config come from repository secrets; nothing secret is in the
+  repo.
+
 ## Roadmap
 
 - [x] Vehicles API client and DTO (Ktor + kotlinx.serialization)
