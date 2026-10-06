@@ -57,6 +57,8 @@ Release notes for each upload: [`distribution/whatsnew/whatsnew-en-US`](../whats
 
 - **Not affiliated:** the description ends with the disclaimer; keep it. Don't use Carris
   Metropolitana, TML or Navegante logos in the screenshots or graphics.
-- **Maps key:** after the first upload, add the **app signing key SHA-1** (Test and release → App
-  integrity → App signing) to the Maps key's Android restrictions, or the map is grey for Play users.
+- **Maps key:** after the first upload, add the **app signing key SHA-1** to the Maps key's Android
+  restrictions, or the map is grey for Play users. In Play Console: *Protected with Play* → Play app
+  signing (App integrity moved there in 2026), or *App bundle explorer* → version → *Downloads* →
+  signing key.
 - Full walk-through, tracks, testing requirement and automation: playbook doc 38.
