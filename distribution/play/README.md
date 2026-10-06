@@ -26,9 +26,9 @@ Release notes for each upload: [`distribution/whatsnew/whatsnew-en-US`](../whats
 |---|---|
 | Privacy policy | URL above |
 | Ads | No ads |
-| App access | All functionality is available without special access (no login) |
-| Content rating | IARC questionnaire: category *Reference, News, or Educational* / utility; no violence, sexual content, language, controlled substances, gambling; no user-generated content or chat; no purchases |
-| Target audience | 18 and over (not designed for children) |
+| Sign in details (was "App access") | No part of the app is restricted (no login, no payments) |
+| Content rating | IARC questionnaire, category *All Other App Types*: No to every question (no ratings-relevant content, no user interaction, no online media content, no age-restricted products, no location sharing, no digital purchases or rewards, not a browser, not news / educational) |
+| Target audience | 13–15, 16–17 and 18 and over (teens use the buses and student passes); not under 13, which would bring in the Families policy; "unintentionally appeals to children": No |
 | News app | No |
 | Government app | No |
 | Financial features | None |
