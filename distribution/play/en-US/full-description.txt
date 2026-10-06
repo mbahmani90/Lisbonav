@@ -1,0 +1,21 @@
+Lisbonav shows Carris Metropolitana buses moving on the map in real time, and reads your Lisbon transit card over NFC.
+
+LIVE BUS MAP
+• Every Carris Metropolitana bus in the Lisbon area, refreshed every 10 seconds
+• Each bus shows which way it is heading; tap one to see its line
+• Type a line number to see only the buses of that line
+• Buses that stopped reporting their position are hidden, so the map shows what is really on the road
+
+TRANSIT CARD READER
+• Hold your Navegante (Lisboa Viva) card to the back of the phone
+• See your passes and until when they are valid, your Zapping balance and your recent trips
+• Read-only: the app never writes to the card
+• Your card data stays on your phone: it is shown on screen and never stored or sent
+
+PRIVACY FIRST
+• No account, no ads, no location access
+• Usage statistics only if you allow them, and you can say no
+
+Card reading needs a phone with NFC.
+
+Lisbonav is an independent app. It is not affiliated with, endorsed by or connected to Carris Metropolitana, Transportes Metropolitanos de Lisboa (TML) or the Navegante brand. Bus positions come from the Carris Metropolitana open data API.

@@ -212,10 +212,13 @@ Shared tests run on both platforms, without network access:
   ```
 
   → signed APK and AAB (version `1.0.0` / `10000` from the tag) → GitHub Release with the APK and
-  `SHA256SUMS.txt`; the AAB is kept as a workflow artifact for Google Play. *Run workflow* on the
+  `SHA256SUMS.txt`, and the AAB to Google Play's internal testing track once enabled
+  (`PLAY_UPLOAD_ENABLED` repository variable). Store listing texts, graphics and the answers for the
+  Play Console forms: [`distribution/play/`](distribution/play/README.md). *Run workflow* on the
   Release workflow is a dry run: it builds and verifies with the real secrets, publishes nothing.
 - Signing key, Maps key and Firebase config come from repository secrets; nothing secret is in the
   repo.
+- Privacy policy: [`PRIVACY.md`](PRIVACY.md).
 
 ## Roadmap
 
