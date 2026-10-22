@@ -12,23 +12,25 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false # never stop a release half-way
 
-permissions:
-  contents: read # default for every job; only "Publish" can write
+# No permissions by default; each job asks for what it needs. Only "Publish" can write.
+permissions: {}
 
 jobs:
   build:
     name: Build signed APK and AAB
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
     outputs:
       version: ${{ steps.version.outputs.name }}
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: zulu # gradle-daemon-jvm.properties asks for Azul 21
           java-version: 21
-      - uses: gradle/actions/setup-gradle@v6
+      - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
 
       # v1.2.3 → 1.2.3 / 10203 (major·10000 + minor·100 + patch: always grows, as Play requires).
       - name: Version from tag
@@ -102,14 +104,14 @@ jobs:
           cp androidApp/build/outputs/bundle/release/androidApp-release.aab "bundle/lisbonav-$VERSION.aab"
           (cd dist && sha256sum ./*.apk > SHA256SUMS.txt && cat SHA256SUMS.txt)
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: release-files
           path: dist/
           if-no-files-found: error
           retention-days: 7
       # For Google Play: the "play" job uploads it; also downloadable for the first, manual upload.
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: play-bundle
           path: bundle/
@@ -129,7 +131,7 @@ jobs:
     permissions:
       contents: write # only this job can create the release; it never sees the signing secrets
     steps:
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: release-files
           path: dist
@@ -148,13 +150,15 @@ jobs:
     if: ${{ github.event_name == 'push' && vars.PLAY_UPLOAD_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v7 # release notes: distribution/whatsnew
-      - uses: actions/download-artifact@v8
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1: release notes: distribution/whatsnew
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: play-bundle
           path: bundle
-      - uses: r0adkll/upload-google-play@v1
+      - uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: com.majidbahmani.lisbonav

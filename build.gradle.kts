@@ -74,6 +74,8 @@ sonar {
         property("sonar.projectKey", "mbahmani90_Lisbonav")
         property("sonar.organization", "mbahmani90")
         property("sonar.host.url", "https://sonarcloud.io")
+        // Waits for the quality gate and fails the task (and CI) when it fails.
+        property("sonar.qualitygate.wait", true)
         // Inherited by every module, so an absolute path to the merged report.
         property(
             "sonar.coverage.jacoco.xmlReportPaths",
