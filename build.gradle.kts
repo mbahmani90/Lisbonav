@@ -9,6 +9,8 @@ plugins {
     alias(libs.plugins.kotlinSerialization) apply false
     alias(libs.plugins.googleServices) apply false
     alias(libs.plugins.spotless)
+    alias(libs.plugins.kover)
+    alias(libs.plugins.sonarqube)
 }
 
 // Code style: ktlint (Android Studio style) + Compose rules. CI runs `spotlessCheck`;
@@ -41,5 +43,46 @@ spotless {
         target("*.gradle.kts", "**/*.gradle.kts")
         targetExclude("**/build/**")
         ktlint(libs.versions.ktlint.get()).editorConfigOverride(ktlintRules)
+    }
+}
+
+// Coverage: Kover measures the JVM test runs (commonTest + androidHostTest) of every module and merges
+// them into one report: `./gradlew koverXmlReport` (XML for SonarQube) or `koverHtmlReport` (to browse).
+// iOS test runs (Kotlin/Native) can't be measured.
+subprojects {
+    apply(plugin = "org.jetbrains.kotlinx.kover")
+
+    // The Sonar plugin doesn't find Kotlin Multiplatform source sets: list them (src/<name>Main, src/<name>Test).
+    pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
+        val sourceSetDirs = file("src").listFiles().orEmpty().filter { it.isDirectory }
+        sonar {
+            properties {
+                property("sonar.sources", sourceSetDirs.filter { it.name.endsWith("Main") })
+                property("sonar.tests", sourceSetDirs.filter { it.name.endsWith("Test") })
+            }
+        }
+    }
+}
+
+dependencies {
+    subprojects.forEach { kover(it) }
+}
+
+// Static analysis on SonarQube Cloud. CI runs `koverXmlReport sonar` with SONAR_TOKEN on pushes to main and PRs.
+sonar {
+    properties {
+        property("sonar.projectKey", "mbahmani90_Lisbonav")
+        property("sonar.organization", "mbahmani90")
+        property("sonar.host.url", "https://sonarcloud.io")
+        // Waits for the quality gate and fails the task (and CI) when it fails.
+        property("sonar.qualitygate.wait", true)
+        // Inherited by every module, so an absolute path to the merged report.
+        property(
+            "sonar.coverage.jacoco.xmlReportPaths",
+            layout.buildDirectory.file("reports/kover/report.xml").get().asFile.absolutePath,
+        )
+        // iosMain is still checked for issues, but left out of coverage: Kover can't measure iOS tests,
+        // so it would always count as 0%.
+        property("sonar.coverage.exclusions", "**/src/iosMain/**")
     }
 }
