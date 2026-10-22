@@ -188,6 +188,16 @@ allowed) with the [Compose rules](https://mrmans0n.github.io/compose-rules/), th
 ./gradlew spotlessCheck   # what CI will run
 ```
 
+Dependency verification: Gradle checks every downloaded dependency against the SHA-256 checksums in
+`gradle/verification-metadata.xml`. After adding or updating a dependency, add its checksums:
+
+```bash
+./gradlew --write-verification-metadata sha256 --refresh-dependencies :androidApp:assembleDebug :androidApp:bundleRelease :androidApp:lintDebug testAndroidHostTest koverXmlReport spotlessCheck compileKotlinMetadata
+```
+
+The Kotlin/Native compiler for the CI runners (Linux, macOS) is downloaded only there: after a Kotlin
+update, add its `kotlin-native-prebuilt-<version>-*.tar.gz` hashes by hand (the `.sha1` files on Maven Central).
+
 ## Tests
 
 Shared tests run on both platforms, without network access:
