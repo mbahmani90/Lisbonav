@@ -195,8 +195,10 @@ Dependency verification: Gradle checks every downloaded dependency against the S
 ./gradlew --write-verification-metadata sha256 --refresh-dependencies :androidApp:assembleDebug :androidApp:bundleRelease :androidApp:lintDebug testAndroidHostTest koverXmlReport spotlessCheck compileKotlinMetadata
 ```
 
-The Kotlin/Native compiler for the CI runners (Linux, macOS) is downloaded only there: after a Kotlin
-update, add its `kotlin-native-prebuilt-<version>-*.tar.gz` hashes by hand (the `.sha1` files on Maven Central).
+Two artifacts are downloaded per operating system, so the command above only adds the one for your
+machine. Add the others by hand from the hash files next to them in the repository:
+- after a Kotlin update: `kotlin-native-prebuilt-<version>-*` (the `.sha1` files on Maven Central)
+- after an AGP update: `aapt2-<version>-{linux,osx,windows}.jar` (the `.sha256` files on Google Maven)
 
 ## Tests
 
