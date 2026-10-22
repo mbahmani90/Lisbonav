@@ -200,11 +200,18 @@ Shared tests run on both platforms, without network access:
 ./gradlew :calypso-nfc:testAndroidHostTest :calypso-nfc:iosSimulatorArm64Test   # card SDK
 ```
 
+Coverage of the JVM test runs (iOS runs can't be measured), merged for all modules:
+
+```bash
+./gradlew koverHtmlReport   # build/reports/kover/html/index.html
+```
+
 ## CI and releases
 
 - **CI** (`.github/workflows/ci.yml`), on every PR and push to `main`: build, unit tests, Android
-  Lint and code style in parallel; the shared tests on the iOS simulator run on `main` only (and on
-  PRs that change the workflow). `main` only accepts PRs with a green **CI result**.
+  Lint, code style and [SonarQube Cloud](https://sonarcloud.io/project/overview?id=mbahmani90_Lisbonav)
+  (issues + coverage from Kover; needs the `SONAR_TOKEN` secret) in parallel; the shared tests on
+  the iOS simulator run on `main` only (and on PRs that change the workflow). `main` only accepts PRs with a green **CI result**.
 - **Releases** (`.github/workflows/release.yml`): push a version tag
 
   ```bash

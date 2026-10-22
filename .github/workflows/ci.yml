@@ -115,6 +115,27 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - run: ./gradlew spotlessCheck
 
+  sonar:
+    name: SonarQube
+    needs: build
+    # PRs from forks don't get secrets: no SONAR_TOKEN, so the job is skipped there.
+    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # full history: Sonar uses git blame to tell new code from old
+      - uses: actions/setup-java@v6
+        with:
+          distribution: zulu
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+      # Runs the JVM tests again for coverage (Kover), then uploads the analysis to SonarQube Cloud.
+      - run: ./gradlew koverXmlReport sonar
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   ios:
     name: iOS
     needs: changes
@@ -147,13 +168,13 @@ jobs:
 
   ci-result:
     name: CI result
-    needs: [changes, build, unit-tests, lint, code-style, ios]
+    needs: [changes, build, unit-tests, lint, code-style, sonar, ios]
     if: ${{ always() }} # also when something failed or was skipped
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       # One required check for branch protection: passes when every job succeeded or was
-      # skipped (docs-only changes, iOS on PRs), fails on failure or cancellation.
+      # skipped (docs-only changes, iOS on PRs, Sonar on fork PRs), fails on failure or cancellation.
       - env:
           RESULTS: ${{ join(needs.*.result, ' ') }}
         run: |
