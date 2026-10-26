@@ -200,6 +200,10 @@ machine. Add the others by hand from the hash files next to them in the reposito
 - after a Kotlin update: `kotlin-native-prebuilt-<version>-*` (the `.sha1` files on Maven Central)
 - after an AGP update: `aapt2-<version>-{linux,osx,windows}.jar` (the `.sha256` files on Google Maven)
 
+Not generated on Windows or Linux at all: the iOS libraries' `*.kotlin_resources.zip` (Compose
+resources, Koin Compose), only downloaded by the iOS build on macOS. After updating Compose or Koin,
+add them from the `sha256` in each iOS variant's `.module` file.
+
 ## Tests
 
 Shared tests run on both platforms, without network access:
