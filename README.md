@@ -188,6 +188,22 @@ allowed) with the [Compose rules](https://mrmans0n.github.io/compose-rules/), th
 ./gradlew spotlessCheck   # what CI will run
 ```
 
+Dependency verification: Gradle checks every downloaded dependency against the SHA-256 checksums in
+`gradle/verification-metadata.xml`. After adding or updating a dependency, add its checksums:
+
+```bash
+./gradlew --write-verification-metadata sha256 --refresh-dependencies :androidApp:assembleDebug :androidApp:bundleRelease :androidApp:lintDebug testAndroidHostTest koverXmlReport spotlessCheck compileKotlinMetadata
+```
+
+Two artifacts are downloaded per operating system, so the command above only adds the one for your
+machine. Add the others by hand from the hash files next to them in the repository:
+- after a Kotlin update: `kotlin-native-prebuilt-<version>-*` (the `.sha1` files on Maven Central)
+- after an AGP update: `aapt2-<version>-{linux,osx,windows}.jar` (the `.sha256` files on Google Maven)
+
+Not generated on Windows or Linux at all: the iOS libraries' `*.kotlin_resources.zip` (Compose
+resources, Koin Compose), only downloaded by the iOS build on macOS. After updating Compose or Koin,
+add them from the `sha256` in each iOS variant's `.module` file.
+
 ## Tests
 
 Shared tests run on both platforms, without network access:
@@ -200,11 +216,18 @@ Shared tests run on both platforms, without network access:
 ./gradlew :calypso-nfc:testAndroidHostTest :calypso-nfc:iosSimulatorArm64Test   # card SDK
 ```
 
+Coverage of the JVM test runs (iOS runs can't be measured), merged for all modules:
+
+```bash
+./gradlew koverHtmlReport   # build/reports/kover/html/index.html
+```
+
 ## CI and releases
 
 - **CI** (`.github/workflows/ci.yml`), on every PR and push to `main`: build, unit tests, Android
-  Lint and code style in parallel; the shared tests on the iOS simulator run on `main` only (and on
-  PRs that change the workflow). `main` only accepts PRs with a green **CI result**.
+  Lint, code style and [SonarQube Cloud](https://sonarcloud.io/project/overview?id=mbahmani90_Lisbonav)
+  (issues + coverage from Kover; needs the `SONAR_TOKEN` secret) in parallel; the shared tests on
+  the iOS simulator run on `main` only (and on PRs that change the workflow). `main` only accepts PRs with a green **CI result**.
 - **Releases** (`.github/workflows/release.yml`): push a version tag
 
   ```bash
